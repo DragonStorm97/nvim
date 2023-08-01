@@ -918,6 +918,7 @@ require("lazy").setup({
 			build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
 		},
 		{ "rouge8/neotest-rust" },
+		{ import = "lazyvim.plugins.extras.test.core" },
 		{ "nvim-neotest/neotest-go" },
 		{
 			"nvim-neotest/neotest",
@@ -934,7 +935,93 @@ require("lazy").setup({
 					},
 					["neotest-rust"] = {},
 				},
+				status = { virtual_text = true },
+				output = { open_on_run = true },
+				quickfix = {
+					open = function()
+						if require("lazyvim.util").has("trouble.nvim") then
+							vim.cmd("Trouble quickfix")
+						else
+							vim.cmd("copen")
+						end
+					end,
+				},
 			},
+			config = function(_, opts)
+				local neotest_ns = vim.api.nvim_create_namespace("neotest")
+				vim.diagnostic.config({
+					virtual_text = {
+						format = function(diagnostic)
+							-- Replace newline and tab characters with space for more compact diagnostics
+							local message =
+								diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+							return message
+						end,
+					},
+				}, neotest_ns)
+
+				if opts.adapters then
+					local adapters = {}
+					for name, config in pairs(opts.adapters or {}) do
+						if type(name) == "number" then
+							if type(config) == "string" then
+								config = require(config)
+							end
+							adapters[#adapters + 1] = config
+						elseif config ~= false then
+							local adapter = require(name)
+							if type(config) == "table" and not vim.tbl_isempty(config) then
+								local meta = getmetatable(adapter)
+								if adapter.setup then
+									adapter.setup(config)
+								elseif meta and meta.__call then
+									adapter(config)
+								else
+									error("Adapter " .. name .. " does not support setup")
+								end
+							end
+							adapters[#adapters + 1] = adapter
+						end
+					end
+					opts.adapters = adapters
+				end
+
+				require("neotest").setup(opts)
+			end,
+      -- stylua: ignore
+      keys = {
+        {
+          "<leader>tt",
+          function() require("neotest").run.run(vim.fn.expand("%")) end,
+          desc = "Run File"
+        },
+        {
+          "<leader>tT",
+          function() require("neotest").run.run(vim.loop.cwd()) end,
+          desc = "Run All Test Files"
+        },
+        {
+          "<leader>tr",
+          function() require("neotest").run.run() end,
+          desc = "Run Nearest"
+        },
+        {
+          "<leader>ts",
+          function() require("neotest").summary.toggle() end,
+          desc = "Toggle Summary"
+        },
+        {
+          "<leader>to",
+          function() require("neotest").output.open({ enter = true, auto_close = true }) end,
+          desc = "Show Output"
+        },
+        {
+          "<leader>tO",
+          function() require("neotest").output_panel.toggle() end,
+          desc = "Toggle Output Panel"
+        },
+        { "<leader>tS", function() require("neotest").run.stop() end, desc = "Stop" },
+      },
 		},
 		{
 			"mfussenegger/nvim-dap",
@@ -995,6 +1082,7 @@ require("lazy").setup({
 						defaults = {
 							["<leader>D"] = { name = "+debug" },
 							["<leader>Da"] = { name = "+adapters" },
+							["<leader>t"] = { name = "+test" },
 						},
 					},
 				},
@@ -1160,6 +1248,49 @@ require("lazy").setup({
 				end
 			end,
 		},
+		-- {
+		-- 	"folke/tokyonight.nvim",
+		-- 	lazy = true,
+		-- 	-- opts = { style = "moon" },
+		-- 	opts = { style = "night" },
+		-- },
+		{
+			"catppuccin/nvim",
+			lazy = true,
+			name = "catppuccin",
+			priority = 1000,
+			opts = {
+				integrations = {
+					alpha = true,
+					cmp = true,
+					flash = true,
+					gitsigns = true,
+					illuminate = true,
+					indent_blankline = { enabled = true },
+					lsp_trouble = true,
+					mason = true,
+					mini = true,
+					native_lsp = {
+						enabled = true,
+						underlines = {
+							errors = { "undercurl" },
+							hints = { "undercurl" },
+							warnings = { "undercurl" },
+							information = { "undercurl" },
+						},
+					},
+					navic = { enabled = true, custom_bg = "lualine" },
+					neotest = true,
+					noice = true,
+					notify = true,
+					neotree = true,
+					semantic_tokens = true,
+					telescope = true,
+					treesitter = true,
+					which_key = true,
+				},
+			},
+		},
 		-- { import = "lazyvim.plugins.extras.lang.typescript" },
 		-- { import = "lazyvim.plugins.extras.lang.json" },
 		-- { import = "lazyvim.plugins.extras.ui.mini-animate" },
@@ -1175,7 +1306,7 @@ require("lazy").setup({
 		version = false, -- always use the latest git commit
 		-- version = "*", -- try installing the latest stable version for plugins that support semver
 	},
-	install = { colorscheme = { "tokyonight", "habamax" } },
+	install = { colorscheme = { "catppuccin", "tokyonight", "habamax" } },
 	checker = { enabled = true }, -- automatically check for plugin updates
 	performance = {
 		rtp = {
@@ -1195,6 +1326,10 @@ require("lazy").setup({
 		},
 	},
 })
+
+-- set colorscheme:
+vim.cmd.colorscheme("tokyonight-moon")
+vim.cmd.colorscheme("catppuccin-mocha")
 
 vim.o.foldcolumn = "1" -- '0' is not bad
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
@@ -1247,7 +1382,8 @@ vim.keymap.set("", "<leader>md", "<cmd>Glow<cr>", { desc = "Open Glow Markdown P
 
 -- open git fugitive
 vim.keymap.set("", "<leader>G", "<cmd>Git<cr>", { desc = "Open vim-fuGITive" })
--- TODO: open a quick git dif for current file
+--  open a quick git dif for current file
+-- exists: <leader>ghd
 
 -- Open spectre
 vim.keymap.set("", "<leader>H", "<cmd>Spectre<cr>", { desc = "Open Spectre (Find and Replace)" })
