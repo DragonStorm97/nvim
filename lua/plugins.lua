@@ -1279,6 +1279,10 @@ require("lazy").setup({
 							information = { "undercurl" },
 						},
 					},
+					dap = {
+						enabled = true,
+						enable_ui = true, -- enable nvim-dap-ui
+					},
 					navic = { enabled = true, custom_bg = "lualine" },
 					neotest = true,
 					noice = true,
@@ -1288,6 +1292,7 @@ require("lazy").setup({
 					telescope = true,
 					treesitter = true,
 					which_key = true,
+					hop = true,
 				},
 			},
 		},
