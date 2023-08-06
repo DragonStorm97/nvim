@@ -843,10 +843,16 @@ return {
 	{
 		"ellisonleao/glow.nvim",
 		config = function()
-			require("glow").setup({
-				-- NOTE: rather ensure glow is in path
-				-- install_path = "C:/ProgramData/chocolatey/lib/glow/tools",
-			})
+			local ok, mason_registry = pcall(require, "mason-registry")
+			if ok then
+				local glow_pkg = mason_registry.get_package("glow")
+				local glow_path = glow_pkg:get_install_path()
+				require("glow").setup({
+					-- NOTE: rather ensure glow is in path
+					-- install_path = "C:/ProgramData/chocolatey/lib/glow/tools",
+					install_path = glow_path,
+				})
+			end
 		end,
 		cmd = "Glow",
 	},
@@ -988,6 +994,7 @@ return {
 				"goimports-reviser",
 				"delve",
 				"codelldb",
+				"glow",
 			},
 		},
 	},
