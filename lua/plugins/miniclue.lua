@@ -68,7 +68,7 @@ return {
 						width = "auto",
 						-- delay = 500,
 						col = 150, -- vim.api.nvim_win_get_width(vim.api.nvim_get_current_win()) / 3,
-						row = 50, -- vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) / 3,
+						row = 30, -- vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) / 3,
 					},
 
 					-- Delay before showing clue window
