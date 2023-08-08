@@ -2,6 +2,8 @@ return {
 	{
 		"echasnovski/mini.clue",
 		version = false,
+		enabled = true,
+		lazy = false,
 		config = function()
 			local miniclue = require("mini.clue")
 			miniclue.setup({

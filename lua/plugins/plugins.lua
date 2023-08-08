@@ -20,9 +20,14 @@ return {
 			require("neo-tree").setup({
 				window = {
 					mappings = {
-						["D"] = "show_diff",
-						-- TODO:
-						-- ["G"] = "toggle_git_stage",
+						["gd"] = "show_diff",
+						["gA"] = "git_add_all",
+						["gu"] = "git_unstage_file",
+						["ga"] = "git_add_file",
+						["gr"] = "git_revert_file",
+						["gc"] = "git_commit",
+						["gp"] = "git_push",
+						["gg"] = "git_commit_and_push",
 					},
 				},
 				filesystem = {
@@ -48,8 +53,9 @@ return {
 							{ "icon" },
 							{ "name", use_git_status_colors = true },
 							{ "harpoon_index" }, --> This is what actually adds the component in where you want it
-							{ "diagnostics" },
-							{ "git_status", highlight = "NeoTreeDimText" },
+							{ "modified", zindex = 20, align = "right" },
+							{ "diagnostics", zindex = 20, align = "right" },
+							{ "git_status", zindex = 20, align = "right" },
 						},
 					},
 					commands = {
@@ -85,12 +91,20 @@ return {
 							-- vim.cmd([[Ghdiffsplit]]) -- or
 							vim.cmd([[Gvdiffsplit]])
 						end,
-						-- TODO:
-						-- toggle_git_stage = function(state)
-						--          -- if the file is not staged (and can be) stage it:
-						-- 	-- require("vim-fugitive").init_options
-						--          -- otherwise, if the file is staged, unstage it
-						--        end,
+					},
+				},
+				git_status = {
+					window = {
+						position = "float",
+						mappings = {
+							["A"] = "git_add_all",
+							["gu"] = "git_unstage_file",
+							["ga"] = "git_add_file",
+							["gr"] = "git_revert_file",
+							["gc"] = "git_commit",
+							["gp"] = "git_push",
+							["gg"] = "git_commit_and_push",
+						},
 					},
 				},
 			})
@@ -224,6 +238,17 @@ return {
 		end,
 	},
 	{
+		"L3MON4D3/LuaSnip",
+		-- follow latest release.
+		-- version = "2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+		-- install jsregexp (optional!).
+		-- build = "make install_jsregexp",
+		dependencies = { "rafamadriz/friendly-snippets" },
+		config = function()
+			require("luasnip.loaders.from_vscode").lazy_load()
+		end,
+	},
+	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			{
@@ -232,6 +257,20 @@ return {
 				config = true,
 			},
 		},
+		config = function()
+			require("cmp").setup({
+				snippet = {
+					expand = function(args)
+						require("luasnip").lsp_expand(args.body)
+					end,
+				},
+
+				sources = {
+					{ name = "luasnip" },
+					-- more sources
+				},
+			})
+		end,
 		---@param opts cmp.ConfigSchema
 		opts = function(_, opts)
 			local cmp = require("cmp")
@@ -239,6 +278,9 @@ return {
 				{ name = "crates" },
 			}))
 		end,
+	},
+	{
+		"saadparwaiz1/cmp_luasnip",
 	},
 	{
 		"Saecki/crates.nvim",
@@ -289,7 +331,7 @@ return {
 				},
 			}
 		end,
-		config = function() end,
+		-- config = function() end,
 	},
 	{
 		"p00f/clangd_extensions.nvim",
@@ -334,8 +376,8 @@ return {
 				"jose-elias-alvarez/typescript.nvim",
 				init = function()
 					require("lazyvim.util").on_attach(function(_, buffer)
-          -- stylua: ignore
-          vim.keymap.set("n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
+            -- stylua: ignore
+            vim.keymap.set("n", "<leader>co", "TypescriptOrganizeImports", { buffer = buffer, desc = "Organize Imports" })
 						vim.keymap.set(
 							"n",
 							"<leader>cR",
@@ -718,6 +760,8 @@ return {
 	},
 	{
 		"wintermute-cell/gitignore.nvim",
+		enabled = true,
+		lazy = false,
 		dependencies = {
 			"nvim-telescope/telescope.nvim",
 		},
@@ -750,7 +794,7 @@ return {
 						chunkText = truncate(chunkText, targetWidth - curWidth)
 						local hlGroup = chunk[2]
 						table.insert(newVirtText, { chunkText, hlGroup })
-						chunkWidth = vim.fn.strdisplaywidth(chunkTeyt)
+						chunkWidth = vim.fn.strdisplaywidth(chunkText)
 						-- str width returned from truncate() may less than 2nd argument, need padding
 						if curWidth + chunkWidth < targetWidth then
 							suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
@@ -769,14 +813,17 @@ return {
 				git = "",
 			}
 
-			local opts = { noremap = false, silent = true }
+			local opts = function(str)
+				return { desc = str, noremap = false, silent = true }
+			end
+
 			local keymap = vim.keymap.set
 			--Folds
 			-- TODO: use whichkey / add descriptions
-			keymap("n", "zR", require("ufo").openAllFolds, opts)
-			keymap("n", "zM", require("ufo").closeAllFolds, opts)
-			keymap("n", "zr", require("ufo").openFoldsExceptKinds, opts)
-			keymap("n", "zm", require("ufo").closeFoldsWith, opts)
+			keymap("n", "zR", require("ufo").openAllFolds, opts("Open All Folds"))
+			keymap("n", "zM", require("ufo").closeAllFolds, opts("Close All Folds"))
+			keymap("n", "zr", require("ufo").openFoldsExceptKinds, opts("Open FOlds Except Kinds"))
+			keymap("n", "zm", require("ufo").closeFoldsWith, opts("Close Folds With"))
 			keymap("n", "zk", function()
 				local winid = require("ufo").peekFoldedLinesUnderCursor()
 				if not winid then
@@ -816,7 +863,18 @@ return {
 		end,
 	},
 	{
+		"nvim-treesitter/nvim-treesitter-context",
+		enabled = true,
+		lazy = false,
+		cmd = "TSContextToggle",
+		-- config = function()
+		-- 	require("nvim-treesitter-context").setup({})
+		-- end,
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+	},
+	{
 		"nvim-treesitter/playground",
+		cmd = "TSPlayground",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 	{
