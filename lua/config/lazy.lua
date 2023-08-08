@@ -69,8 +69,6 @@ require("lazy").setup({
 					semantic_tokens = true,
 					telescope = true,
 					treesitter = true,
-					-- TODO: check again after evaluating mini.clue
-					-- which_key = true,
 					hop = true,
 				},
 			},

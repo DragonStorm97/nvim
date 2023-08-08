@@ -67,7 +67,7 @@ vim.keymap.set("i", "<M-Del>", "<Esc>dwi", { desc = "Delete Word Under Cursor" }
 vim.keymap.set("n", "<M-Del>", "dw", { desc = "Delete Word Under Cursor" })
 
 -- CTRL-Enter to enter a new line without going into insert mode:
-vim.keymap.set("n", "<CR>", "o<Esc>", { desc = "Add newline At EOL" })
+-- vim.keymap.set("n", "<CR>", "o<Esc>", { desc = "Add newline At EOL" })
 -- can't do C-CR, it inserts <C-w>j; so rather not map it
 -- vim.keymap.set("n", "<CR>j", "O<Esc>", { desc = "Add newline At EOL" })
 
@@ -146,3 +146,6 @@ end, { desc = "[H]arpoon: Previous File" })
 vim.keymap.set("n", "<leader>hN", function()
 	ui.nav_next()
 end, { desc = "[H]arpoon: Next File" })
+
+-- Toggle TreesitterContext
+vim.keymap.set("n", "<leader>cC", "<cmd>TSContextToggle<cr>", { desc = "Toggle TS Context" })
