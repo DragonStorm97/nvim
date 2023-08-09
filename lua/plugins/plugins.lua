@@ -1,5 +1,11 @@
 return {
 	{
+		"norcalli/nvim-colorizer.lua",
+		config = function()
+			require("colorizer").setup({ "*" }, {})
+		end,
+	},
+	{
 		"tpope/vim-fugitive",
 		cmd = "Git",
 	},
@@ -112,7 +118,7 @@ return {
 	},
 	{
 		"simrat39/symbols-outline.nvim",
-		cmd = "SymbolsOutline",
+		cmd = { "SymbolsOutline", "SymbolsOutlineOpen", "SymbolsOutlineClose" },
 		keys = { { "<leader>cs", "<cmd>SymbolsOutline<cr>", desc = "Symbols Outline" } },
 		config = true,
 	},
@@ -879,23 +885,46 @@ return {
 	},
 	{
 		"epwalsh/obsidian.nvim",
-		lazy = true,
+		-- lazy = true,
 		--event = { "BufReadPre path/to/my-vault/**.md" },
 		-- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand':
 		-- TODO: add ObsidianMasterVault as environment var
-		event = { "BufReadPre " .. vim.fn.expand("~") .. "/OneDrive/ObsidianMasterVault" },
+		-- event = { "BufReadPre " .. vim.fn.expand("~") .. "/OneDrive/ObsidianMasterVault" },
+		event = { "BufReadPre *.md" },
 		dependencies = {
 			-- Required.
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope.nvim",
 		},
+		keys = {
+			{
+				"gf",
+				"<cmd>ObsidianFollowLink<cr>",
+				desc = "Obsidian Go To file",
+			},
+			{
+				"gr",
+				"<cmd>ObsidianBacklinks<cr>",
+				desc = "Obsidian List References",
+			},
+			{
+				"<leader>mf",
+				"<cmd>ObsidianQuickSwitch<cr>",
+				desc = "Obsidian List Notes",
+			},
+			{
+				"<leader>ms",
+				"<cmd>ObsidianSearch<cr>",
+				desc = "Obsidian Search Notes",
+			},
+		},
 		config = function()
 			require("obsidian").setup({
-				dir = "~/OneDrive/ObsidianMasterVault", -- no need to call 'vim.fn.expand' here
+				-- dir = "~/OneDrive/ObsidianMasterVault", -- no need to call 'vim.fn.expand' here
 				-- Optional, key mappings.
 				mappings = {
 					-- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-					["gf"] = require("obsidian.mapping").mapping.gf_passthrough(),
+					["gf"] = require("obsidian.mapping").gf_passthrough(),
 				},
 				finder = "telescope.nvim",
 			})
