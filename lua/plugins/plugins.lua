@@ -236,6 +236,8 @@ return {
 					"regex",
 					"vim",
 					"yaml",
+					"scala",
+					"java",
 				})
 				opts.auto_install = true
 				opts.highlight.enable = true
@@ -898,17 +900,17 @@ return {
 		},
 		keys = {
 			{
-				"gf",
+				"<leader>mf",
 				"<cmd>ObsidianFollowLink<cr>",
 				desc = "Obsidian Go To file",
 			},
 			{
-				"gr",
+				"<leader>mr",
 				"<cmd>ObsidianBacklinks<cr>",
 				desc = "Obsidian List References",
 			},
 			{
-				"<leader>mf",
+				"<leader>mq",
 				"<cmd>ObsidianQuickSwitch<cr>",
 				desc = "Obsidian List Notes",
 			},
@@ -924,7 +926,7 @@ return {
 				-- Optional, key mappings.
 				mappings = {
 					-- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-					["gf"] = require("obsidian.mapping").gf_passthrough(),
+					-- ["mf"] = require("obsidian.mapping").gf_passthrough(),
 				},
 				finder = "telescope.nvim",
 			})
