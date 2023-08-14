@@ -11,18 +11,18 @@ vim.keymap.set("n", "zM", require("ufo").closeAllFolds, {
 })
 
 -- Open Window Picker with ALT-W or <leader>wp
-vim.keymap.set({ "i", "n", "v" }, "<M-w>", function()
-	local idx = require("window-picker").pick_window()
-	if idx ~= nil then
-		vim.api.nvim_set_current_win(idx)
-	end
-end, { desc = "Pick Window" })
-vim.keymap.set({ "n", "v" }, "<leader>wp", function()
-	local idx = require("window-picker").pick_window()
-	if idx ~= nil then
-		vim.api.nvim_set_current_win(idx)
-	end
-end, { desc = "Pick Window" })
+-- vim.keymap.set({ "i", "n", "v" }, "<M-w>", function()
+-- 	local idx = require("window-picker").pick_window()
+-- 	if idx ~= nil then
+-- 		vim.api.nvim_set_current_win(idx)
+-- 	end
+-- end, { desc = "Pick Window" })
+-- vim.keymap.set({ "n", "v" }, "<leader>wp", function()
+-- 	local idx = require("window-picker").pick_window()
+-- 	if idx ~= nil then
+-- 		vim.api.nvim_set_current_win(idx)
+-- 	end
+-- end, { desc = "Pick Window" })
 
 vim.keymap.set("", "<M-f>", "<Cmd>HopPattern<CR>", { desc = "Hop for Pattern" })
 
