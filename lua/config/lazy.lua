@@ -120,7 +120,19 @@ vim.o.foldenable = true
 
 require("nvim-treesitter.configs").setup({
 	-- A list of parser names, or "all"
-	ensure_installed = { "vimdoc", "javascript", "typescript", "c", "lua", "rust", "cpp", "go", "json" },
+	ensure_installed = {
+		"vimdoc",
+		"javascript",
+		"typescript",
+		"c",
+		"lua",
+		"rust",
+		"cpp",
+		"go",
+		"json",
+		"scala",
+		"java",
+	},
 	sync_install = false,
 	auto_install = true,
 	highlight = {
