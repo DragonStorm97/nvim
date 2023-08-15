@@ -132,6 +132,7 @@ require("nvim-treesitter.configs").setup({
 		"json",
 		"scala",
 		"java",
+		"markdown",
 	},
 	sync_install = false,
 	auto_install = true,
