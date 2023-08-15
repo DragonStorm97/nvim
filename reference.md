@@ -484,10 +484,11 @@ install glow
 
 `<C-b>` = scroll up 4
 `<C-f>` = scroll down 4
-`<C-spce>` = complete
+`<C-space>` = complete
+`<C-e>` = abort
 `<C-y>` = confirm
 `<Tab>` = select next item
-`<S-Tab>` = select prev item
+`<S-Tab>` = select previous item
 
 # vim Regex {pattern}s
 
