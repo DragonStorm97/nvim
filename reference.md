@@ -480,6 +480,15 @@ install glow
 
 - https://github.com/linux-cultist/venv-selector.nvim
 
+# nvim-cmp
+
+`<C-b>` = scroll up 4
+`<C-f>` = scroll down 4
+`<C-spce>` = complete
+`<C-y>` = confirm
+`<Tab>` = select next item
+`<S-Tab>` = select prev item
+
 # vim Regex {pattern}s
 
 ## Special char NOT requiring escape
