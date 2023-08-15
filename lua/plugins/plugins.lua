@@ -257,6 +257,14 @@ return {
 		end,
 	},
 	{
+		"saadparwaiz1/cmp_luasnip",
+	},
+	{ "neovim/nvim-lspconfig" },
+	{ "hrsh7th/cmp-nvim-lsp" },
+	{ "hrsh7th/cmp-buffer" },
+	{ "hrsh7th/cmp-path" },
+	{ "hrsh7th/cmp-cmdline" },
+	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			{
@@ -264,19 +272,49 @@ return {
 				event = { "BufRead Cargo.toml" },
 				config = true,
 			},
+			{ "neovim/nvim-lspconfig" },
 		},
 		config = function()
-			require("cmp").setup({
+			local cmp = require("cmp")
+			cmp.setup({
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
 					end,
 				},
-
-				sources = {
-					{ name = "luasnip" },
-					-- more sources
+				window = {
+					completion = cmp.config.window.bordered(),
+					documentation = cmp.config.window.bordered(),
 				},
+				mapping = cmp.mapping.preset.insert({
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<C-y>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+					["<Tab>"] = function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						else
+							fallback()
+						end
+					end,
+					["<S-Tab>"] = function(fallback)
+						if cmp.visible() then
+							cmp.select_prev_item()
+						else
+							fallback()
+						end
+					end,
+				}),
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
+					{ name = "nvim_lua" },
+					-- { name = "vsnip" }, -- For vsnip users.
+				}, {
+					{ name = "buffer" },
+				}),
 			})
 		end,
 		---@param opts cmp.ConfigSchema
@@ -286,9 +324,6 @@ return {
 				{ name = "crates" },
 			}))
 		end,
-	},
-	{
-		"saadparwaiz1/cmp_luasnip",
 	},
 	{
 		"Saecki/crates.nvim",
@@ -379,8 +414,21 @@ return {
 	},
 	{
 		"neovim/nvim-lspconfig",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{
+				{ "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+				{ "folke/neodev.nvim", opts = {} },
+				"mason.nvim",
+				{
+					"williamboman/mason-lspconfig.nvim",
+				},
+				{
+					"hrsh7th/cmp-nvim-lsp",
+					-- cond = function()
+					--        return require("lazyvim.util").has("nvim-cmp")
+					-- end,
+				},
 				"jose-elias-alvarez/typescript.nvim",
 				init = function()
 					require("lazyvim.util").on_attach(function(_, buffer)
@@ -398,6 +446,7 @@ return {
 		},
 		opts = {
 			servers = {
+				ltex = {},
 				tsserver = {},
 				-- Ensure mason installs the server
 				rust_analyzer = {
@@ -679,6 +728,15 @@ return {
 					nls.builtins.code_actions.impl,
 					nls.builtins.formatting.gofumpt,
 					nls.builtins.formatting.goimports_reviser,
+					-- nls.builtins.code_actions.ltrs,
+					-- nls.builtins.formatting.stylua,
+					-- nls.builtins.code_actions.gitsigns,
+					-- nls.builtins.code_actions.proselint, --TODO:
+					nls.builtins.completion.luasnip,
+					-- nls.builtins.completion.spell,
+					-- nls.builtins.completion.tags,
+					-- nls.builtins.diagnostics.buf,
+					-- nls.builtins.diagnostics.codespell, -- TODO:
 				})
 			end
 		end,
@@ -1079,7 +1137,7 @@ return {
 				"stylua",
 				"shellcheck",
 				"shfmt",
-				"flake8",
+				-- "flake8",
 				"gomodifytags",
 				"impl",
 				"gofumpt",
@@ -1087,6 +1145,11 @@ return {
 				"delve",
 				"codelldb",
 				"glow",
+				-- "proselint",
+				-- "buf",
+				"prettierd",
+				"ltex-ls",
+				-- "codespell",
 			},
 		},
 	},
