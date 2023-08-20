@@ -436,16 +436,16 @@ install glow
 ## ------ telescope-undo
 
 `<leader>r` = open telescope undo
-`i` = {
-`<cr>` = yank_additions,
-`<S-cr>` = yank_deletions,
-`<C-cr>` = restore,
-},
-`n` = {
-`y` = yank_additions,
-`Y` = yank_deletions,
-`u` = restore,
-},
+`i` : 
+- `<cr>` = yank_additions,
+- `<S-cr>` = yank_deletions,
+- `<C-cr>` = restore,
+
+`n` : 
+- `y` = yank_additions,
+- `Y` = yank_deletions,
+- `u` = restore,
+
 
 ## ------ undotree
 
@@ -471,7 +471,7 @@ install glow
 
 # ------ nvim-treesitter/nvim-treesitter
 
-:TS\*
+
 
 # ------ nvim-treesitter/playground
 
@@ -479,6 +479,9 @@ install glow
 
 # TODO:
 
+- https://github.com/ThePrimeagen/refactoring.nvim
+- https://github.com/Badhi/nvim-treesitter-cpp-tools
+- https://github.com/m4xshen/hardtime.nvim
 - https://github.com/linux-cultist/venv-selector.nvim
 
 # nvim-cmp
