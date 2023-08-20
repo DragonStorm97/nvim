@@ -71,6 +71,7 @@ return {
 					open = "SymbolsOutlineOpen",
 					size = { height = 0.7 },
 				},
+        -- TODO: add the clang symbols, AST & class hierarchy to the left panel
 				-- any other neo-tree windows
 				"neo-tree",
 			},
