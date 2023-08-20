@@ -149,3 +149,18 @@ end, { desc = "[H]arpoon: Next File" })
 
 -- Toggle TreesitterContext
 vim.keymap.set("n", "<leader>cC", "<cmd>TSContextToggle<cr>", { desc = "Toggle TS Context" })
+
+
+
+-- refactoring: (ThePrimagen/refactoring.nvim)
+-- TODO: maybe prefix all these with "e" (extract) so its <leader>Re$?
+vim.keymap.set("x", "<leader>Rf", function() require('refactoring').refactor('Extract Function') end, {desc = "Extract Function"})
+vim.keymap.set("x", "<leader>RF", function() require('refactoring').refactor('Extract Function To File') end,{desc = "Extract Function To File"})
+-- Extract function supports only visual mode
+vim.keymap.set("x", "<leader>Rv", function() require('refactoring').refactor('Extract Variable') end, {desc = "Extract Variable"})
+-- Extract variable supports only visual mode
+vim.keymap.set({ "n", "x" }, "<leader>Ri", function() require('refactoring').refactor('Inline Variable') end, {desc = "Inline Variable"})
+-- Inline var supports both normal and visual mode
+vim.keymap.set("n", "<leader>Rb", function() require('refactoring').refactor('Extract Block') end, {desc = "Extract Block"})
+vim.keymap.set("n", "<leader>RB", function() require('refactoring').refactor('Extract Block To File') end, {desc = "Extract Block To File"})
+-- Extract block supports only normal mode
