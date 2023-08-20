@@ -450,7 +450,7 @@ install glow
 
 ## ------ undotree
 
-`<leader>R` = toggle undotree
+`<leader>Ru` = toggle undotree
 
 ## ----- vim-fugitive (for :Git)
 

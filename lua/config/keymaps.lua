@@ -36,18 +36,18 @@ end, { desc = "Open File Picker" })
 -- end, { desc = "Open macroscope" })
 
 -- telescope-undo:
-vim.keymap.set("n", "<leader>r", "<cmd>Telescope undo<cr>", { desc = "Open Undo History" })
+vim.keymap.set("", "<leader>r", "<cmd>Telescope undo<cr>", { desc = "Open Undo History" })
 
 -- telescope show notifies (nvim-notify):
-vim.keymap.set("n", "<leader>wn", "<cmd>Telescope notify<cr>", { desc = "Open Notifications" })
+vim.keymap.set("", "<leader>wn", "<cmd>Telescope notify<cr>", { desc = "Open Notifications" })
 -- undotree
-vim.keymap.set("n", "<leader>R", "<CMD>UndotreeToggle<CR>", { desc = "Open Undotree" })
+vim.keymap.set("", "<leader>Ru", "<CMD>UndotreeToggle<CR>", { desc = "Open Undotree" })
 
 -- Glow Markdown
 vim.keymap.set("", "<leader>md", "<cmd>Glow<cr>", { desc = "Open Glow Markdown Preview" })
 
 -- open git fugitive
-vim.keymap.set("", "<leader>G", "<cmd>Git<cr>", { desc = "Open vim-fuGITive" })
+vim.keymap.set("", "<leader>gv", "<cmd>Git<cr>", { desc = "Open vim-fuGITive" })
 --  open a quick git dif for current file
 -- exists: <leader>ghd
 

@@ -391,18 +391,18 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
-    keys = {
-      {
-        "<leader>Cs",
+    keys = {},
+    config = function()
+      vim.keymap.set(
+        { "n", "x", "v" },
+        "<leader>Rs",
         function()
           require("telescope").extensions.refactoring.refactors()
         end,
         -- function() require('refactoring').select_refactor() end,
-        desc = "Select Refactoring",
-      },
-    },
-    config = function()
-      vim.keymap.set({ "n", "x" }, "<leader>C", "<leader>C", { desc = "Refactoring" })
+        { desc = "Select Refactoring" }
+      )
+      vim.keymap.set({ "n", "x", "v" }, "<leader>R", "<leader>R", { desc = "+Refactoring" })
       require("refactoring").setup({
         -- prompt for return type
         prompt_func_return_type = {
