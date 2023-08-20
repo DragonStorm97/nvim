@@ -47,6 +47,7 @@ surrounding area with character: mini.surround
 `gP` = P and puts the cursor after the pasted selection
 `g<C-H>` = enter block select mode
 `c` = change = cut + enter insert mode
+`C` = Change until end of line!
 `x` = dl = deletes the character under the cursor
 `X` = dh = deletes the character before the cursor
 `s` = ch = deletes the character under the cursor and puts you into Insert mode
