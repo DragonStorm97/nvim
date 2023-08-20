@@ -18,11 +18,13 @@ require("lazy").setup({
 		{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
 		{ import = "lazyvim.plugins.extras.formatting.prettier" },
 		{ import = "lazyvim.plugins.extras.lang.clangd" },
+		{ import = "lazyvim.plugins.extras.lang.cmake" },
 		{ import = "lazyvim.plugins.extras.lang.go" },
 		{ import = "lazyvim.plugins.extras.lang.json" },
 		{ import = "lazyvim.plugins.extras.lang.rust" },
 		{ import = "lazyvim.plugins.extras.coding.yanky" },
 		{ import = "lazyvim.plugins.extras.test.core" },
+		{ import = "lazyvim.plugins.extras.lang.docker" },
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
 		-- { import = "lazyvim.plugins.extras.ui.mini-animate" },
 		{ import = "plugins" },
@@ -121,18 +123,50 @@ vim.o.foldenable = true
 require("nvim-treesitter.configs").setup({
 	-- A list of parser names, or "all"
 	ensure_installed = {
-		"vimdoc",
-		"javascript",
-		"typescript",
+		"bash",
 		"c",
-		"lua",
-		"rust",
+		"cmake",
 		"cpp",
+		"css",
+		"dockerfile",
+		"git_config",
+		"git_rebase",
+		"gitattributes",
+		"gitcommit",
+		"gitignore",
 		"go",
-		"json",
-		"scala",
+		"gomod",
+		"gosum",
+		"gowork",
+		"graphql",
+		"html",
+		"http",
+		"ini",
 		"java",
+		"javascript",
+		"json",
+		"json",
+		"json5",
+		"jsonc",
+		"llvm",
+		"lua",
+		"make",
 		"markdown",
+		"markdown_inline",
+		"ocaml",
+		"python",
+		"query",
+		"regex",
+		"ron",
+		"rust",
+		"scala",
+		"toml",
+		"typescript",
+		"vim",
+		"vimdoc",
+		"xml",
+		"yaml",
+		"zig",
 	},
 	sync_install = false,
 	auto_install = true,
@@ -146,16 +180,30 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- WHY? this is needed for gopls, but rust, etc. works fine
-require("lspconfig").gopls.setup({
-	cmd = { "gopls", "serve" },
-	filetypes = { "go", "gomod" },
-	root_dir = require("lspconfig/util").root_pattern("go.work", "go.mod", ".git"),
-	settings = {
-		gopls = {
-			analyses = {
-				unusedparams = true,
-			},
-			staticcheck = true,
-		},
-	},
-})
+-- require("lspconfig").gopls.setup({
+-- 	cmd = { "gopls", "serve" },
+-- 	filetypes = { "go", "gomod" },
+-- 	root_dir = require("lspconfig/util").root_pattern("go.work", "go.mod", ".git"),
+-- 	settings = {
+-- 		gopls = {
+-- 			analyses = {
+-- 				unusedparams = true,
+-- 			},
+-- 			staticcheck = true,
+-- 		},
+-- 	},
+-- })
+
+-- require("lspconfig").clangd.setup({
+-- 	cmd = { "gopls", "serve" },
+-- 	filetypes = { "go", "gomod" },
+-- 	root_dir = require("lspconfig/util").root_pattern("*.cpp", "*.h", ".git"),
+-- 	settings = {
+-- 		gopls = {
+-- 			analyses = {
+-- 				unusedparams = true,
+-- 			},
+-- 			staticcheck = true,
+-- 		},
+-- 	},
+-- })
