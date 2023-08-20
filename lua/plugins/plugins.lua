@@ -385,6 +385,50 @@ return {
       }))
     end,
   },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    keys = {
+      {
+        "<leader>Cs",
+        function()
+          require("telescope").extensions.refactoring.refactors()
+        end,
+        -- function() require('refactoring').select_refactor() end,
+        desc = "Select Refactoring",
+      },
+    },
+    config = function()
+      vim.keymap.set({ "n", "x" }, "<leader>C", "<leader>C", { desc = "Refactoring" })
+      require("refactoring").setup({
+        -- prompt for return type
+        prompt_func_return_type = {
+          go = true,
+          java = true,
+
+          cpp = true,
+          c = true,
+          h = true,
+          hpp = true,
+          cxx = true,
+        },
+        -- prompt for function parameters
+        prompt_func_param_type = {
+          go = true,
+          java = true,
+
+          cpp = true,
+          c = true,
+          h = true,
+          hpp = true,
+          cxx = true,
+        },
+      })
+    end,
+  },
   --{ "kkharji/sqlite.lua", module = "sqlite" },
   -- {
   -- 	"s1n7ax/nvim-window-picker",
@@ -428,6 +472,7 @@ return {
     dependencies = {
       { "nvim-lua/plenary.nvim" },
       { "debugloop/telescope-undo.nvim" },
+      { "ThePrimeagen/refactoring.nvim" },
       -- TODO: install fzf to do this
       -- {
       -- 	"nvim-telescope/telescope-fzf-native.nvim",
@@ -461,6 +506,7 @@ return {
         },
       })
       require("telescope").load_extension("undo")
+      require("telescope").load_extension("refactoring")
     end,
   },
   {

@@ -479,7 +479,6 @@ install glow
 
 # TODO:
 
-- https://github.com/ThePrimeagen/refactoring.nvim
 - https://github.com/Badhi/nvim-treesitter-cpp-tools
 - https://github.com/m4xshen/hardtime.nvim
 - https://github.com/linux-cultist/venv-selector.nvim
