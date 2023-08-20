@@ -328,7 +328,8 @@ d/c/y all insert into registers.
 `a` = add
 `d` = delete
 `h` = highlight
-`r` = replace
+`r` = replace char
+`R` = enter replace mode (like pressing insert in a normal editor)
 `f` = find | F = find rev
 `gza{i|a}{motion}{character}`
 
