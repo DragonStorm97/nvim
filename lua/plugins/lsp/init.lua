@@ -74,9 +74,7 @@ return {
         ltex = {},
         tsserver = {},
         -- Ensure mason installs the server
-        rust_analyzer = {
-
-        },
+        rust_analyzer = {},
         taplo = {
           keys = {
             {
@@ -107,8 +105,7 @@ return {
             },
           },
         },
-        gopls = {
-        },
+        gopls = {},
         -- Ensure mason installs the server
         clangd = {},
       },
@@ -157,46 +154,123 @@ return {
     },
   },
   {
-    "Saecki/crates.nvim",
-    event = { "BufRead Cargo.toml" },
-
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    "Badhi/nvim-treesitter-cpp-tools",
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter" },
+    },
     config = function()
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-        pattern = { "Cargo.toml" },
-        desc = 'Add Cargo Crates keymaps',
-        group = vim.api.nvim_create_augroup('RustCargoKeys', { clear = true }),
+        pattern = { "*.cpp", "*.hpp", "*.h", "*.hxx", "*.cxx", "*.c" },
+        desc = "Add cpp-tools keymaps",
+        group = vim.api.nvim_create_augroup("CppToolsKeymaps", { clear = true }),
         callback = function(opts)
-          if vim.bo[opts.buf].filetype == 'toml' then
-            local crates = require('crates')
+          local fpt = vim.bo[opts.buf].filetype
+          if fpt == "cpp" or fpt == "hpp" or fpt == "h" or fpt == "hxx" or fpt == "cxx" or fpt == "c" then
             local kopts = function(desc)
               return { desc = desc, silent = true, buffer = opts.buf }
             end
-            vim.keymap.set({ 'n', 'v' }, '<leader>cR', '<leader>cR', { desc = "Rust Crates" })
-
-            vim.keymap.set('n', '<leader>cRt', crates.toggle, kopts("Toggle Crates"))
-            vim.keymap.set('n', '<leader>cRr', crates.reload, kopts("Reload Crates"))
-            vim.keymap.set('n', '<leader>cRv', crates.show_versions_popup, kopts("Show Versions"))
-            vim.keymap.set('n', '<leader>cRf', crates.show_features_popup, kopts("Show Features"))
-            vim.keymap.set('n', '<leader>cRd', crates.show_dependencies_popup, kopts("Show Dependencies"))
-            vim.keymap.set('n', '<leader>cRu', crates.update_crate, kopts("Update Crate"))
-            vim.keymap.set('v', '<leader>cRu', crates.update_crates, kopts("Update Crates"))
-            vim.keymap.set('n', '<leader>cRa', crates.update_all_crates, kopts("Update All Crates"))
-            -- vim.keymap.set('n', '<leader>cRU', crates.upgrade_crate, kopts("Update Crate"))
-            -- vim.keymap.set('v', '<leader>cRU', crates.upgrade_crates, kopts("Update Crates"))
-            -- vim.keymap.set('n', '<leader>cRA', crates.upgrade_all_crates, kopts("Update All Crates"))
-            vim.keymap.set('n', '<leader>cRe', crates.expand_plain_crate_to_inline_table,
-              kopts("Expand Crate to Inline Table"))
-            vim.keymap.set('n', '<leader>cRE', crates.extract_crate_into_table, kopts("Extract Crate into Table"))
-            vim.keymap.set('n', '<leader>cRH', crates.open_homepage, kopts("Open Homepage"))
-            vim.keymap.set('n', '<leader>cRR', crates.open_repository, kopts("Open Repository"))
-            vim.keymap.set('n', '<leader>cRD', crates.open_documentation, kopts("Open Documentation"))
-            vim.keymap.set('n', '<leader>cRC', crates.open_crates_io, kopts("Open Crates.io"))
+            vim.keymap.set({ "n", "v", "x" }, "<leader>cc", "<leader>cc", { desc = "+ C++" })
+            vim.keymap.set(
+              { "n", "v", "x" },
+              "<leader>ccd",
+              "<cmd>TSCppDefineClassFunc<cr>",
+              kopts("Define Class Functions (C++)")
+            )
+            vim.keymap.set(
+              { "n", "v", "x" },
+              "<leader>cci",
+              "<cmd>TSCppMakeConcreteClass<cr>",
+              kopts("Implement Class from Abstract Class (C++)")
+            )
+            vim.keymap.set(
+              { "n", "v", "x" },
+              "<leader>cc3",
+              "<cmd>TSCppRuleOf3<cr>",
+              kopts("Add declerations for rule-of-3 (C++)")
+            )
+            vim.keymap.set(
+              { "n", "v", "x" },
+              "<leader>cc5",
+              "<cmd>TSCppRuleOf5<cr>",
+              kopts("Add declerations for rule-of-5 (C++)")
+            )
           end
         end,
       })
 
-      require('crates').setup({
+      require("nt-cpp-tools").setup({
+        preview = {
+          quit = "<c-e>",                         -- optional keymapping for quite preview
+          accept = "<c-y>",                       -- optional keymapping for accept preview
+        },
+        header_extension = "hpp",                 -- optional
+        source_extention = "cpp",                 -- optional
+        custom_define_class_function_commands = { -- optional
+          TSCppImplWrite = {
+            output_handle = require("nt-cpp-tools.output_handlers").get_add_to_cpp(),
+          },
+          --[[
+            <your impl function custom command name> = {
+                output_handle = function (str, context)
+                    -- string contains the class implementation
+                    -- do whatever you want to do with it
+                end
+            }
+          ]]
+        },
+      })
+    end,
+  },
+  {
+    "Saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
+
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+        pattern = { "Cargo.toml" },
+        desc = "Add Cargo Crates keymaps",
+        group = vim.api.nvim_create_augroup("RustCargoKeys", { clear = true }),
+        callback = function(opts)
+          if vim.bo[opts.buf].filetype == "toml" then
+            local crates = require("crates")
+            local kopts = function(desc)
+              return { desc = desc, silent = true, buffer = opts.buf }
+            end
+            vim.keymap.set({ "n", "v" }, "<leader>cR", "<leader>cR", { desc = "Rust Crates" })
+
+            vim.keymap.set("n", "<leader>cRt", crates.toggle, kopts("Toggle Crates"))
+            vim.keymap.set("n", "<leader>cRr", crates.reload, kopts("Reload Crates"))
+            vim.keymap.set("n", "<leader>cRv", crates.show_versions_popup, kopts("Show Versions"))
+            vim.keymap.set("n", "<leader>cRf", crates.show_features_popup, kopts("Show Features"))
+            vim.keymap.set("n", "<leader>cRd", crates.show_dependencies_popup, kopts("Show Dependencies"))
+            vim.keymap.set("n", "<leader>cRu", crates.update_crate, kopts("Update Crate"))
+            vim.keymap.set("v", "<leader>cRu", crates.update_crates, kopts("Update Crates"))
+            vim.keymap.set("n", "<leader>cRa", crates.update_all_crates, kopts("Update All Crates"))
+            -- vim.keymap.set('n', '<leader>cRU', crates.upgrade_crate, kopts("Update Crate"))
+            -- vim.keymap.set('v', '<leader>cRU', crates.upgrade_crates, kopts("Update Crates"))
+            -- vim.keymap.set('n', '<leader>cRA', crates.upgrade_all_crates, kopts("Update All Crates"))
+            vim.keymap.set(
+              "n",
+              "<leader>cRe",
+              crates.expand_plain_crate_to_inline_table,
+              kopts("Expand Crate to Inline Table")
+            )
+            vim.keymap.set(
+              "n",
+              "<leader>cRE",
+              crates.extract_crate_into_table,
+              kopts("Extract Crate into Table")
+            )
+            vim.keymap.set("n", "<leader>cRH", crates.open_homepage, kopts("Open Homepage"))
+            vim.keymap.set("n", "<leader>cRR", crates.open_repository, kopts("Open Repository"))
+            vim.keymap.set("n", "<leader>cRD", crates.open_documentation, kopts("Open Documentation"))
+            vim.keymap.set("n", "<leader>cRC", crates.open_crates_io, kopts("Open Crates.io"))
+          end
+        end,
+      })
+
+      require("crates").setup({
         null_ls = {
           enabled = true,
           name = "crates.nvim",
@@ -422,151 +496,150 @@ return {
             capabilities = lsp_utils.capabilities,
             server = {
               on_attach = function(client, bufnr)
-                AddKeymaps(bufnr,
+                AddKeymaps(bufnr, {
                   {
-                    {
-                      "<C-space>",
-                      "<cmd>RustHoverActions<cr>",
-                      { desc = "Hover Actions (Rust)" },
-                    },
-                    {
-                      "K",
-                      "<cmd>RustHoverActions<cr>",
-                      { desc = "Hover Actions (Rust)" },
-                    },
-                    {
-                      "<leader>cR",
-                      "<leader>cR",
-                      { desc = "Rust" }
-                    },
+                    "<C-space>",
+                    "<cmd>RustHoverActions<cr>",
+                    { desc = "Hover Actions (Rust)" },
+                  },
+                  {
+                    "K",
+                    "<cmd>RustHoverActions<cr>",
+                    { desc = "Hover Actions (Rust)" },
+                  },
+                  {
+                    "<leader>cR",
+                    "<leader>cR",
+                    { desc = "Rust" },
+                  },
 
-                    {
-                      "<leader>cRa",
-                      "<cmd>RustCodeAction<cr>",
-                      { desc = "Code Action (Rust)" }
-                    },
-                    {
-                      "<leader>Dr",
-                      "<cmd>RustDebuggables<cr>",
-                      { desc = "Run Debuggables (Rust)" }
-                    },
-                    {
-                      "<leader>cRh",
-                      "<leader>cRh",
-                      { desc = "Inlay Hints", }
-                    },
-                    {
-                      "<leader>cRhs",
-                      "<cmd>RustSetInlayHints<Cr>",
-                      { desc = "Set Inlay Hints (Rust)", }
-                    },
-                    {
-                      "<leader>cRhd",
-                      "<cmd>RustDisableInlayHints<Cr>",
-                      { desc = "Disable Inlay Hints (Rust)", }
-                    },
-                    {
-                      "<leader>cRht",
-                      "<cmd>RustToggleInlayHints<Cr>",
-                      { desc = "Toggle Inylay Hints (Rust)", }
-                    },
-                    {
-                      "<leader>cRr",
-                      "<cmd>RustRunnables<Cr>",
-                      { desc = "Runnables (Rust)", }
-                    },
-                    {
-                      "<leader>cRe",
-                      "<leader>cRe",
-                      { desc = "Expansions", }
-                    },
-                    {
-                      "<leader>cRem",
-                      "<cmd>RustExpandMacro<Cr>",
-                      { desc = "Expand Macro (Rust)", }
-                    },
-                    {
-                      "<leader>cRo",
-                      "<leader>cRo",
-                      { desc = "Open", }
-                    },
+                  {
+                    "<leader>cRa",
+                    "<cmd>RustCodeAction<cr>",
+                    { desc = "Code Action (Rust)" },
+                  },
+                  {
+                    "<leader>Dr",
+                    "<cmd>RustDebuggables<cr>",
+                    { desc = "Run Debuggables (Rust)" },
+                  },
+                  {
+                    "<leader>cRh",
+                    "<leader>cRh",
+                    { desc = "Inlay Hints" },
+                  },
+                  {
+                    "<leader>cRhs",
+                    "<cmd>RustSetInlayHints<Cr>",
+                    { desc = "Set Inlay Hints (Rust)" },
+                  },
+                  {
+                    "<leader>cRhd",
+                    "<cmd>RustDisableInlayHints<Cr>",
+                    { desc = "Disable Inlay Hints (Rust)" },
+                  },
+                  {
+                    "<leader>cRht",
+                    "<cmd>RustToggleInlayHints<Cr>",
+                    { desc = "Toggle Inylay Hints (Rust)" },
+                  },
+                  {
+                    "<leader>cRr",
+                    "<cmd>RustRunnables<Cr>",
+                    { desc = "Runnables (Rust)" },
+                  },
+                  {
+                    "<leader>cRe",
+                    "<leader>cRe",
+                    { desc = "Expansions" },
+                  },
+                  {
+                    "<leader>cRem",
+                    "<cmd>RustExpandMacro<Cr>",
+                    { desc = "Expand Macro (Rust)" },
+                  },
+                  {
+                    "<leader>cRo",
+                    "<leader>cRo",
+                    { desc = "Open" },
+                  },
 
-                    {
-                      "<leader>cRoc",
-                      "<cmd>RustOpenCargo<Cr>",
-                      { desc = "Open Cargo (Rust)", }
-                    },
-                    {
-                      "<leader>cRom",
-                      "<cmd>RustParentModule<Cr>",
-                      { desc = "Open Parent Module (Rust)", }
-                    },
-                    {
-                      "<leader>cRJ",
-                      "<cmd>RustJoinLines<Cr>",
-                      { desc = "Join Lines (Rust)", }
-                    },
-                    {
-                      "<leader>cRha",
-                      "<cmd>RustHoverActions<Cr>",
-                      { desc = "Hover Action (Rust)", }
-                    },
-                    {
-                      "<leader>cRhr",
-                      "<cmd>RustHoverRange<Cr>",
-                      { desc = "Hover Range (Rust)", }
-                    },
-                    {
-                      "<leader>cRm",
-                      "<leader>cRm",
-                      { desc = "Move", }
-                    },
-                    {
-                      "<leader>cRmd",
-                      "<cmd>RustMoveItemDown<Cr>",
-                      { desc = "Move Item Down (Rust)", }
-                    },
-                    {
-                      "<leader>cRmu",
-                      "<cmd>RustMoveItemUp<Cr>",
-                      { desc = "Move Item Up (Rust)", }
-                    },
-                    {
-                      "<leader>cRs",
-                      "<leader>cRs",
-                      { desc = "Start", }
-                    },
-                    {
-                      "<leader>cRsb",
-                      "<cmd>RustStartStandaloneServerForBuffer<Cr>",
-                      { desc = "Start Standalone Server For Buffer (Rust)", }
-                    },
-                    {
-                      "<leader>cRd",
-                      "<cmd>RustDebuggables<Cr>",
-                      { desc = "Run Debuggables (Rust)" }
-                    },
-                    {
-                      "<leader>cRv",
-                      "<cmd>RustViewCrateGraph<Cr>",
-                      { desc = "View Crate Graph (Rust)" }
-                    },
-                    {
-                      "<leader>cRw",
-                      "<cmd>RustReloadWorkspace<Cr>",
-                      { desc = "Reload Workspace (Rust)" }
-                    },
-                    {
-                      "<leader>cRss",
-                      "<cmd>RustSSR<Cr>",
-                      { desc = "SSR (Rust)" }
-                    },
-                    {
-                      "<leader>cRx",
-                      "<cmd>RustOpenExternalDocs<Cr>",
-                      { desc = "Open External Docs (Rust)", }
-                    },
-                  })
+                  {
+                    "<leader>cRoc",
+                    "<cmd>RustOpenCargo<Cr>",
+                    { desc = "Open Cargo (Rust)" },
+                  },
+                  {
+                    "<leader>cRom",
+                    "<cmd>RustParentModule<Cr>",
+                    { desc = "Open Parent Module (Rust)" },
+                  },
+                  {
+                    "<leader>cRJ",
+                    "<cmd>RustJoinLines<Cr>",
+                    { desc = "Join Lines (Rust)" },
+                  },
+                  {
+                    "<leader>cRha",
+                    "<cmd>RustHoverActions<Cr>",
+                    { desc = "Hover Action (Rust)" },
+                  },
+                  {
+                    "<leader>cRhr",
+                    "<cmd>RustHoverRange<Cr>",
+                    { desc = "Hover Range (Rust)" },
+                  },
+                  {
+                    "<leader>cRm",
+                    "<leader>cRm",
+                    { desc = "Move" },
+                  },
+                  {
+                    "<leader>cRmd",
+                    "<cmd>RustMoveItemDown<Cr>",
+                    { desc = "Move Item Down (Rust)" },
+                  },
+                  {
+                    "<leader>cRmu",
+                    "<cmd>RustMoveItemUp<Cr>",
+                    { desc = "Move Item Up (Rust)" },
+                  },
+                  {
+                    "<leader>cRs",
+                    "<leader>cRs",
+                    { desc = "Start" },
+                  },
+                  {
+                    "<leader>cRsb",
+                    "<cmd>RustStartStandaloneServerForBuffer<Cr>",
+                    { desc = "Start Standalone Server For Buffer (Rust)" },
+                  },
+                  {
+                    "<leader>cRd",
+                    "<cmd>RustDebuggables<Cr>",
+                    { desc = "Run Debuggables (Rust)" },
+                  },
+                  {
+                    "<leader>cRv",
+                    "<cmd>RustViewCrateGraph<Cr>",
+                    { desc = "View Crate Graph (Rust)" },
+                  },
+                  {
+                    "<leader>cRw",
+                    "<cmd>RustReloadWorkspace<Cr>",
+                    { desc = "Reload Workspace (Rust)" },
+                  },
+                  {
+                    "<leader>cRss",
+                    "<cmd>RustSSR<Cr>",
+                    { desc = "SSR (Rust)" },
+                  },
+                  {
+                    "<leader>cRx",
+                    "<cmd>RustOpenExternalDocs<Cr>",
+                    { desc = "Open External Docs (Rust)" },
+                  },
+                })
                 -- Enable completion triggered by <c-x><c-o>
                 vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
               end,
