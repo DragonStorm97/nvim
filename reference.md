@@ -45,9 +45,10 @@ surrounding area with character: mini.surround
 `A` = append to end of the line (goes into INSERT MODE)
 `gp` = p but puts the cursor after the pasted selection
 `gP` = P and puts the cursor after the pasted selection
-`g<C-H>` = enter block select mode
+`stringg<C-H>` = enter block select mode
+`CTRL-v` = enter block-select mode
 `c` = change = cut + enter insert mode
-`C` = Change until end of line!
+`C` = Cstringhange until end of line!
 `x` = dl = deletes the character under the cursor
 `X` = dh = deletes the character before the cursor
 `s` = ch = deletes the character under the cursor and puts you into Insert mode
@@ -307,6 +308,7 @@ d/c/y all insert into registers.
 # ---- MULTIPLE CURSORS ----------
 
 `g-<ctrl-H>` = enter block-select mode (i.e mu)
+`CTRL-v` = enter block-select mode
 
 # ---------- MACROS -----------
 
@@ -437,16 +439,17 @@ install glow
 ## ------ telescope-undo
 
 `<leader>r` = open telescope undo
-`i` : 
+`i` :
+
 - `<cr>` = yank_additions,
 - `<S-cr>` = yank_deletions,
 - `<C-cr>` = restore,
 
-`n` : 
+`n` :
+
 - `y` = yank_additions,
 - `Y` = yank_deletions,
 - `u` = restore,
-
 
 ## ------ undotree
 
@@ -471,8 +474,6 @@ install glow
 `gd` = git diff
 
 # ------ nvim-treesitter/nvim-treesitter
-
-
 
 # ------ nvim-treesitter/playground
 
@@ -532,6 +533,6 @@ Interpreted as regular expression operators only when escaped (otherwise will be
 
 `:g/<pattern>/d_` = delete all lines matching pattern
 `s/^.*$\n//` = delete empty lines
-`s/<­pattern>/new &/` = Replace pattern by "new <whole matched patter­n>"
+`s/<­pattern>/new &/` = Replace pattern by "new <whole matched patter­n> "
 `s/<­pattern>/­\=@a/` = Replace pattern by content of register "a"
 `s/<­pattern>//gn` = Count nb occurence of pattern
