@@ -3,12 +3,12 @@
 -- Add any additional keymaps here
 
 -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
-vim.keymap.set("n", "zR", require("ufo").openAllFolds, {
-	desc = "Open all Folds",
-})
-vim.keymap.set("n", "zM", require("ufo").closeAllFolds, {
-	desc = "Close all Folds",
-})
+-- vim.keymap.set("n", "zR", require("ufo").openAllFolds, {
+-- 	desc = "Open all Folds",
+-- })
+-- vim.keymap.set("n", "zM", require("ufo").closeAllFolds, {
+-- 	desc = "Close all Folds",
+-- })
 
 -- Open Window Picker with ALT-W or <leader>wp
 -- vim.keymap.set({ "i", "n", "v" }, "<M-w>", function()

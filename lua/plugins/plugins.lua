@@ -34,15 +34,22 @@ return {
 						["gc"] = "git_commit",
 						["gp"] = "git_push",
 						["gg"] = "git_commit_and_push",
+						[";"] = "harpoon_toggle",
 					},
 				},
 				filesystem = {
 					components = {
 						harpoon_index = function(config, node, state)
 							local Marked = require("harpoon.mark")
+							local utils = require("harpoon.utils")
 							local abs_path = node.path
+							local norm_path = utils.normalize_path(abs_path)
 							-- fix for m$ paths:
-							local path = string.gsub(abs_path, "\\", "/")
+							-- local rel_path = vim.fn.fnamemodify(abs_path, ":~:.")
+							-- local path = string.gsub(rel_path, "\\", "/")
+							local path = abs_path
+							-- TODO: try and normalise to workspace_folder?
+							-- print(path)
 							local succuss, index = pcall(Marked.get_index_of, path)
 							if succuss and index and index > 0 then
 								return {
@@ -51,6 +58,7 @@ return {
 								}
 							else
 								return {}
+								-- return { text = "NOT IN HARPOON" }
 							end
 						end,
 					},
@@ -58,7 +66,7 @@ return {
 						file = {
 							{ "icon" },
 							{ "name", use_git_status_colors = true },
-							{ "harpoon_index" }, --> This is what actually adds the component in where you want it
+							{ "harpoon_index", align = "left" }, --> This is what actually adds the component in where you want it
 							{ "modified", zindex = 20, align = "right" },
 							{ "diagnostics", zindex = 20, align = "right" },
 							{ "git_status", zindex = 20, align = "right" },
@@ -97,6 +105,19 @@ return {
 							-- vim.cmd([[Ghdiffsplit]]) -- or
 							vim.cmd([[Gvdiffsplit]])
 						end,
+						harpoon_toggle = function(state)
+							local node = state.tree:get_node()
+							local mark = require("harpoon.mark")
+							local utils = require("harpoon.utils")
+							local abs_path = node.path
+							local norm_path = utils.normalize_path(abs_path)
+
+							-- fix for m$ paths:
+							-- local rel_path = vim.fn.fnamemodify(abs_path, ":~:.")
+
+							-- local path = string.gsub(rel_path, "\\", "/")
+							mark.toggle_file(norm_path)
+						end,
 					},
 				},
 				git_status = {
@@ -124,6 +145,9 @@ return {
 	},
 	{
 		"nvim-lualine/lualine.nvim",
+		dependencies = {
+			"folke/noice.nvim",
+		},
 		event = "VeryLazy",
 		opts = function()
 			local icons = require("lazyvim.config").icons
@@ -596,13 +620,25 @@ return {
 			end, { desc = "Update git [I]gnore" })
 		end,
 	},
+
 	{
 		"kevinhwang91/nvim-ufo",
-		event = { "User FileOpened" },
-		cmd = { "UfoDetach" },
-		enabled = true,
 		dependencies = "kevinhwang91/promise-async",
-		config = function()
+		opts = {
+			filetype_exclude = {
+				"help",
+				"alpha",
+				"dashboard",
+				"neo-tree",
+				"Trouble",
+				"lazy",
+				"mason",
+				"lualine",
+				"statusline",
+			},
+		},
+		config = function(_, opts)
+			-- make-pretty function
 			local handler = function(virtText, lnum, endLnum, width, truncate)
 				local newVirtText = {}
 				local suffix = (" 󰁃 %d "):format(endLnum - lnum)
@@ -631,31 +667,44 @@ return {
 				return newVirtText
 			end
 
+			-- auto-detach from buggers we don't want to handle!
+			vim.api.nvim_create_autocmd("FileType", {
+				group = vim.api.nvim_create_augroup("local_detach_ufo", { clear = true }),
+				pattern = opts.filetype_exclude,
+				callback = function()
+					-- print("exiting ufo because in one of these" .. vim.inspect(opts.filetype_exclude))
+					require("ufo").detach()
+					vim.opt_local.foldenable = false
+					-- vim.wo.foldcolun = "0"
+				end,
+			})
+
+			vim.opt.foldlevelstart = 99
+
 			local ftMap = {
 				vim = "indent",
 				python = { "indent" },
 				git = "",
 			}
-
-			local opts = function(str)
-				return { desc = str, noremap = false, silent = true }
-			end
-
-			local keymap = vim.keymap.set
+			-- local opts = function(str)
+			-- 	return { desc = str, noremap = false, silent = true }
+			-- end
+			-- local keymap = vim.keymap.set
 			--Folds
 			-- TODO: use whichkey / add descriptions
-			keymap("n", "zR", require("ufo").openAllFolds, opts("Open All Folds"))
-			keymap("n", "zM", require("ufo").closeAllFolds, opts("Close All Folds"))
-			keymap("n", "zr", require("ufo").openFoldsExceptKinds, opts("Open FOlds Except Kinds"))
-			keymap("n", "zm", require("ufo").closeFoldsWith, opts("Close Folds With"))
-			keymap("n", "zk", function()
-				local winid = require("ufo").peekFoldedLinesUnderCursor()
-				if not winid then
-					vim.lsp.buf.hover()
-				end
-			end, { desc = "Peak Folded Lines Under Cursor" })
+			-- keymap("n", "zR", require("ufo").openAllFolds, opts("Open All Folds"))
+			-- keymap("n", "zM", require("ufo").closeAllFolds, opts("Close All Folds"))
+			-- keymap("n", "zr", require("ufo").openFoldsExceptKinds, opts("Open FOlds Except Kinds"))
+			-- keymap("n", "zm", require("ufo").closeFoldsWith, opts("Close Folds With"))
+			-- keymap("n", "zk", function()
+			-- 	local winid = require("ufo").peekFoldedLinesUnderCursor()
+			-- 	if not winid then
+			-- 		vim.lsp.buf.hover()
+			-- 	end
+			-- end, { desc = "Peak Folded Lines Under Cursor" })
 
 			require("ufo").setup({
+				enable_get_fold_virt_text = true,
 				fold_virt_text_handler = handler,
 				open_fold_hl_timeout = 150,
 				close_fold_kinds = { "imports", "comment" },
@@ -671,10 +720,10 @@ return {
 						scrollD = "<C-d>",
 					},
 				},
-
-				provider_selector = function(bufnr, filetype, buftype)
-					return ftMap[filetype] or { "treesitter", "indent" }
-				end,
+				-- TODO: try and setup lsp capabilities for folding instead
+				-- provider_selector = function(bufnr, filetype, buftype)
+				-- 	return ftMap[filetype] or { "treesitter", "indent" }
+				-- end,
 			})
 		end,
 	},

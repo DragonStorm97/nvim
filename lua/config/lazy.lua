@@ -28,6 +28,21 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
 		{ import = "lazyvim.plugins.extras.lsp.none-ls" },
 		-- { import = "lazyvim.plugins.extras.ui.mini-animate" },
+		{
+			"folke/noice.nvim",
+			event = "VeryLazy",
+			opts = {
+				-- add any options here
+			},
+			dependencies = {
+				-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+				"MunifTanjim/nui.nvim",
+				-- OPTIONAL:
+				--   `nvim-notify` is only needed, if you want to use the notification view.
+				--   If not available, we use `mini` as the fallback
+				-- "rcarriga/nvim-notify",
+			},
+		},
 		{ import = "plugins" },
 		{
 			"folke/tokyonight.nvim",
@@ -37,6 +52,9 @@ require("lazy").setup({
 		},
 		{
 			"catppuccin/nvim",
+			dependencies = {
+				"folke/noice.nvim",
+			},
 			lazy = true,
 			name = "catppuccin",
 			priority = 1000,
