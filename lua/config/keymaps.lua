@@ -170,5 +170,4 @@ vim.keymap.set("n", "<leader>RB", ":Refactor extract_block_to_file", { desc = "E
 -- Extract block supports only normal mode
 
 -- alternative blockwise visual mode (replace C-v with M-v):
-vim.keymap.set({ "n", "v" }, "q", "<C-v>", { desc = "Blockwise Visual Mode" })
 vim.keymap.set({ "n", "v" }, "<M-v>", "<C-v>", { desc = "Blockwise Visual Mode" })

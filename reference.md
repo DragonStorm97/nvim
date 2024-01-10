@@ -45,7 +45,8 @@ surrounding area with character: mini.surround
 `A` = append to end of the line (goes into INSERT MODE)
 `gp` = p but puts the cursor after the pasted selection
 `gP` = P and puts the cursor after the pasted selection
-`stringg<C-H>` = enter block select mode
+`g<C-H>` = enter block select mode
+`CTRL-q` = enter block-select mode
 `CTRL-v` = enter block-select mode
 `c` = change = cut + enter insert mode
 `C` = Cstringhange until end of line!
@@ -309,6 +310,7 @@ d/c/y all insert into registers.
 
 `g-<ctrl-H>` = enter block-select mode (i.e mu)
 `CTRL-v` = enter block-select mode
+`CTRL-q` = enter block-select mode
 
 # ---------- MACROS -----------
 
