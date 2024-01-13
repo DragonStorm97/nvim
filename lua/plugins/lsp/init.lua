@@ -35,6 +35,7 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
 			{
+				-- TODO: wtf is this?
 				{ "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
 				{ "folke/neodev.nvim", opts = {} },
 				"mason.nvim",
@@ -128,7 +129,7 @@ return {
 		opts = {
 			extensions = {
 				inlay_hints = {
-					inline = false,
+					inline = true,
 				},
 				ast = {
 					--These require codicons (https://github.com/microsoft/vscode-codicons)
@@ -284,6 +285,7 @@ return {
 		config = function() end,
 	},
 	{
+		-- TODO: why is nvim-lspconfig here twice D:
 		"neovim/nvim-lspconfig",
 		event = "BufReadPre",
 		dependencies = {
@@ -335,8 +337,49 @@ return {
 						on_attach = lsp_utils.on_attach,
 						capabilities = new_capabilities,
 						settings = {
-							lua_ls = {
-								-- TODO: workspace.ThirdPart = false
+							Lua = {
+								runtime = {
+									version = "LuaJIT",
+								},
+								diagnostics = {
+									-- Get the language server to recognize the global `vim`
+									globals = { "vim", "hs", "spoon" },
+								},
+								workspace = {
+									-- Make the server aware of Neovim runtime files
+									library = vim.api.nvim_get_runtime_file("", true), --get_library(),
+									-- Do not show annoying setting message
+									-- https://www.reddit.com/r/neovim/comments/10qvoky/why_am_i_keep_getting_asked_this_question_all_the/
+									checkThirdParty = false,
+								},
+								format = {
+									enable = true,
+									-- https://github.com/LuaLS/lua-language-server/wiki/Formatter
+									-- https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/docs/format_config.md
+									-- https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/lua.template.editorconfig
+									defaultConfig = {
+										-- The value should be STRING!
+										indent_style = "space",
+										indent_size = "2",
+										quote_style = "double",
+										local_assign_continuation_align_to_first_expression = "true",
+										align_array_table = "false",
+										-- call_arg_parentheses = "remove_table_only",
+										-- keep_one_space_between_table_and_bracket = true,
+										-- align_table_field_to_first_field = true,
+									},
+								},
+								-- Do not send telemetry data containing a randomized but unique identifier
+								telemetry = {
+									enable = false,
+								},
+								completion = {
+									-- Do not complete with arguments, as we always omit arguments
+									callSnippet = "Disable",
+								},
+								semantic = {
+									enable = false, -- Disable highlight as it conflict with treesitter
+								},
 							},
 						},
 					})
