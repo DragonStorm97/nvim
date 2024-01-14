@@ -297,11 +297,6 @@ return {
 			local lspconfig = require("lspconfig")
 			local lsp_utils = require("plugins.lsp.lsp-utils")
 			lsp_utils.setup()
-			local new_capabilities = lsp_utils.capabilities
-			new_capabilities.textDocument.foldingRange = {
-				dynamicRegistration = true,
-				lineFoldingOnly = true,
-			}
 
 			mason_lspconfig.setup({
 				ensure_installed = {
@@ -329,13 +324,13 @@ return {
 				function(server_name)
 					lspconfig[server_name].setup({
 						on_attach = lsp_utils.on_attach,
-						capabilities = new_capabilities,
+						capabilities = lsp_utils.capabilities,
 					})
 				end,
 				["lua_ls"] = function()
 					lspconfig.lua_ls.setup({
 						on_attach = lsp_utils.on_attach,
-						capabilities = new_capabilities,
+						capabilities = lsp_utils.capabilities,
 						settings = {
 							Lua = {
 								runtime = {
@@ -387,7 +382,7 @@ return {
 				["pyright"] = function()
 					lspconfig.pyright.setup({
 						on_attach = lsp_utils.on_attach,
-						capabilities = new_capabilities,
+						capabilities = lsp_utils.capabilities,
 						settings = {
 							python = {
 								analysis = {
@@ -398,7 +393,7 @@ return {
 					})
 				end,
 				["clangd"] = function()
-					local capabilities_cpp = new_capabilities
+					local capabilities_cpp = lsp_utils.capabilities
 					capabilities_cpp.offsetEncoding = { "uts-16" }
 					lspconfig.clangd.setup({
 						on_attach = function(client, bufnr)
@@ -492,7 +487,7 @@ return {
 							-- Enable completion triggered by <c-x><c-o>
 							vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 						end,
-						capabilities = new_capabilities,
+						capabilities = lsp_utils.capabilities,
 						settings = {
 							gopls = {
 								gofumpt = true,
@@ -552,7 +547,7 @@ return {
 					end
 					-- lspconfig.rust_analyzer.setup({})
 					require("rust-tools").setup({
-						capabilities = new_capabilities,
+						capabilities = lsp_utils.capabilities,
 						server = {
 							on_attach = function(client, bufnr)
 								AddKeymaps(bufnr, {
