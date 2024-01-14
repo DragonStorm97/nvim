@@ -84,94 +84,6 @@ return {
 		end,
 	},
 	{
-		"neovim/nvim-lspconfig",
-		event = { "BufReadPre", "BufNewFile" },
-		dependencies = {
-			{
-				-- TODO: wtf is this?
-				{ "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
-				{ "folke/neodev.nvim", opts = {} },
-				"mason.nvim",
-				{
-					"williamboman/mason-lspconfig.nvim",
-				},
-				{
-					"hrsh7th/cmp-nvim-lsp",
-					-- cond = function()
-					--        return require("lazyvim.util").has("nvim-cmp")
-					-- end,
-				},
-				"jose-elias-alvarez/typescript.nvim",
-				init = function()
-					require("lazyvim.util").on_attach(function(_, buffer)
-            -- stylua: ignore
-            AddKeymaps(buffer, {
-              { "<leader>co",
-                "TypescriptOrganizeImports",
-                { buffer = buffer, desc = "Organize Imports" },
-              },
-              {
-                "<leader>cR",
-                "TypescriptRenameFile",
-                { desc = "Rename File", buffer = buffer },
-              },
-            })
-					end)
-				end,
-			},
-		},
-		opts = {
-			servers = {
-				dockerls = {},
-				docker_compose_language_service = {},
-				neocmake = {},
-				ltex = {},
-				tsserver = {},
-				-- Ensure mason installs the server
-				rust_analyzer = {},
-				taplo = {
-					keys = {
-						{
-							"K",
-							function()
-								if vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
-									require("crates").show_popup()
-								else
-									vim.lsp.buf.hover()
-								end
-							end,
-							desc = "Show Crate Documentation",
-						},
-					},
-				},
-				jsonls = {
-					-- lazy-load schemastore when needed
-					on_new_config = function(new_config)
-						new_config.settings.json.schemas = new_config.settings.json.schemas or {}
-						vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
-					end,
-					settings = {
-						json = {
-							format = {
-								enable = true,
-							},
-							validate = { enable = true },
-						},
-					},
-				},
-				gopls = {},
-				-- Ensure mason installs the server
-				clangd = {},
-			},
-			setup = {
-				tsserver = function(_, opts)
-					require("typescript").setup({ server = opts })
-					return true
-				end,
-			},
-		},
-	},
-	{
 		"b0o/SchemaStore.nvim",
 		version = false, -- last release is way too old
 	},
@@ -332,46 +244,126 @@ return {
 			})
 		end,
 	},
+	-- TODO: rust-tools okay?
 	{
 		"simrat39/rust-tools.nvim",
 		-- lazy = true,
 		config = function() end,
 	},
 	{
-		-- TODO: why is nvim-lspconfig here twice D:
 		"neovim/nvim-lspconfig",
-		event = "BufReadPre",
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"williamboman/mason-lspconfig.nvim",
+			{
+				-- TODO: wtf is this?
+				{ "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+				{ "folke/neodev.nvim", opts = {} },
+				{ "mason.nvim" },
+				{ "williamboman/mason-lspconfig.nvim" },
+				{ "p00f/clangd_extensions.nvim" },
+				{
+					"hrsh7th/cmp-nvim-lsp",
+					-- cond = function()
+					--        return require("lazyvim.util").has("nvim-cmp")
+					-- end,
+				},
+				{ "Saecki/crates.nvim" },
+				{ "b0o/SchemaStore.nvim" },
+				"jose-elias-alvarez/typescript.nvim",
+				init = function()
+					require("lazyvim.util").on_attach(function(_, buffer)
+            -- stylua: ignore
+            AddKeymaps(buffer, {
+              { "<leader>co",
+                "TypescriptOrganizeImports",
+                { buffer = buffer, desc = "Organize Imports" },
+              },
+              {
+                "<leader>cR",
+                "TypescriptRenameFile",
+                { desc = "Rename File", buffer = buffer },
+              },
+            })
+					end)
+				end,
+			},
 		},
-		config = function(_, _)
+		opts = {
+			servers = {
+				dockerls = {},
+				docker_compose_language_service = {},
+				neocmake = {},
+				ltex = {},
+				tsserver = {},
+				-- Ensure mason installs the server
+				rust_analyzer = {},
+				taplo = {
+					keys = {
+						{
+							"K",
+							function()
+								if vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
+									require("crates").show_popup()
+								else
+									vim.lsp.buf.hover()
+								end
+							end,
+							desc = "Show Crate Documentation",
+						},
+					},
+				},
+				jsonls = {
+					-- lazy-load schemastore when needed
+					on_new_config = function(new_config)
+						new_config.settings.json.schemas = new_config.settings.json.schemas or {}
+						vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
+					end,
+					settings = {
+						json = {
+							format = {
+								enable = true,
+							},
+							validate = { enable = true },
+						},
+					},
+				},
+				gopls = {},
+				-- Ensure mason installs the server
+				clangd = {},
+			},
+			setup = {
+				tsserver = function(_, opts)
+					require("typescript").setup({ server = opts })
+					return true
+				end,
+			},
+			ensure_installed = {
+				"bashls",
+				"clangd",
+				"cssls",
+				"dockerls",
+				"docker_compose_language_service",
+				"gopls",
+				"graphql",
+				"html",
+				"jsonls",
+				"ltex",
+				"lua_ls",
+				"pyright",
+				"tailwindcss",
+				"taplo",
+				"tsserver",
+				"yamlls",
+				"rust_analyzer",
+			},
+		},
+		config = function(_, opts)
 			local mason_lspconfig = require("mason-lspconfig")
 			local lspconfig = require("lspconfig")
 			local lsp_utils = require("plugins.lsp.lsp-utils")
 			lsp_utils.setup()
 
-			mason_lspconfig.setup({
-				ensure_installed = {
-					"bashls",
-					"clangd",
-					"cssls",
-					"dockerls",
-					"docker_compose_language_service",
-					"gopls",
-					"graphql",
-					"html",
-					"jsonls",
-					"ltex",
-					"lua_ls",
-					"pyright",
-					"tailwindcss",
-					"taplo",
-					"tsserver",
-					"yamlls",
-					"rust_analyzer",
-				},
-			})
+			mason_lspconfig.setup(opts)
 
 			mason_lspconfig.setup_handlers({
 				function(server_name)
