@@ -172,3 +172,19 @@ vim.keymap.set("n", "<leader>RB", ":Refactor extract_block_to_file", { desc = "E
 
 -- alternative blockwise visual mode (replace C-v with M-v):
 vim.keymap.set({ "n", "v" }, "<M-v>", "<C-v>", { desc = "Blockwise Visual Mode" })
+
+-- Trouble prev/next bindings TODO: move somewhere else
+vim.keymap.set({ "n", "v" }, "]T", function()
+	require("trouble").next({ skip_groups = true, jump = true })
+end, { desc = "[t]rouble Next" })
+vim.keymap.set({ "n", "v" }, "[T", function()
+	require("trouble").previous({ skip_groups = true, jump = true })
+end, { desc = "[t]rouble Previous" })
+
+-- general telescope binding:
+vim.keymap.set({ "n", "v" }, "<leader>T", "<cmd>Telescope<cr>", { desc = "Open [Telesecope]" })
+
+-- diagnostic mappings:
+vim.keymap.set({ "n", "v" }, "<leader>C", vim.diagnostic.open_float, { desc = "Open Diagnostic Float" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to Previous Diagnostic" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to Next Diagnostic" })

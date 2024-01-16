@@ -1,5 +1,8 @@
 return {
 	{
+		"tpope/vim-repeat",
+	},
+	{
 		"norcalli/nvim-colorizer.lua",
 		config = function()
 			require("colorizer").setup({ "*" }, {})
@@ -597,6 +600,13 @@ return {
 						},
 					},
 				},
+				defaults = {
+					file_ignore_patterns = {
+						"^.cache/*",
+						"^.git/*",
+						"node_modules/*",
+					},
+				},
 			})
 			require("telescope").load_extension("undo")
 			require("telescope").load_extension("refactoring")
@@ -727,6 +737,7 @@ return {
 			})
 		end,
 	},
+	-- TODO: do I want hop?
 	{
 		"phaazon/hop.nvim",
 		branch = "v2", -- optional but strongly recommended

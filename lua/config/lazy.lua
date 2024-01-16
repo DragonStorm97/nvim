@@ -28,6 +28,7 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
 		{ import = "lazyvim.plugins.extras.lsp.none-ls" },
 		-- { import = "lazyvim.plugins.extras.ui.mini-animate" },
+
 		{
 			"folke/noice.nvim",
 			event = "VeryLazy",

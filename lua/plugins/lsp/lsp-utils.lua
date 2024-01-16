@@ -88,22 +88,31 @@ M.setup = function()
 	-- vim.keymap.set("n", "<leader>wl", function()
 	-- 	print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 	-- end, bufopts("List Workspace Folders"))
-	vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, bufopts("Rename"))
-	vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts("Code Action"))
+
+	-- TODO: this isn't working to make it repeatable... :(
+	local dot_repeatable = require("config.utils").make_repeatable_keymap
+	vim.keymap.set(
+		"n",
+		"<leader>cr",
+		dot_repeatable("n", "<Plug>(LspRename)", vim.lsp.buf.rename),
+		{ desc = "Rename", remap = true }
+	)
+	vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, bufopts("Code Action"))
+
 	-- show diagnostics in hover window
-	-- 	vim.api.nvim_create_autocmd("CursorHold", {
-	-- 		callback = function()
-	-- 			local opts = {
-	-- 				focusable = false,
-	-- 				close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
-	-- 				border = "rounded",
-	-- 				source = "always",
-	-- 				prefix = " ",
-	-- 				scope = "cursor",
-	-- 			}
-	-- 			vim.diagnostic.open_float(nil, opts)
-	-- 		end,
-	-- 	})
+	vim.api.nvim_create_autocmd("CursorHold", {
+		callback = function()
+			local opts = {
+				focusable = false,
+				close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
+				border = "rounded",
+				source = "always",
+				prefix = " ",
+				scope = "cursor",
+			}
+			vim.diagnostic.open_float(nil, opts)
+		end,
+	})
 end
 
 M.on_attach = function(client, bufnr)
