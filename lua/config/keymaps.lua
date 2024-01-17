@@ -103,8 +103,10 @@ vim.keymap.set("n", "<c-a>", "ggVG", { desc = "Select All" })
 
 -- some ThePrimeagen maps:
 -- move selected lines in Visual mode
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move Lines Down" })
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move Lines Up" })
+-- removed because alt-j/k does this already! <M-j/k>
+-- vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move Lines Down" })
+-- vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move Lines Up" })
+
 -- return cursor back when usign line joining
 vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines, move cursor back" })
 -- keep cursor in the middle when doing page jumping
@@ -130,6 +132,7 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Go To Previous Error"
 --vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 -- <leader>S will enter find and replace for the word you're over
 vim.keymap.set("n", "<leader>S", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], { desc = "Replace Word Under Cursor" })
+-- vim.keymap.set("x", "<leader>S", [[ry<cmd>%s/\<<C-r>r\>//gI<Left><Left><Left>]], { desc = "Replace Word Under Cursor" })
 
 -- list workspace symbols:
 vim.keymap.set("n", "gs", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Open Document [S]ymbols" })
