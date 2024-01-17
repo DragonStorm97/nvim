@@ -48,6 +48,32 @@ vim.keymap.set("", "<leader>md", "<cmd>Glow<cr>", { desc = "Open Glow Markdown P
 
 -- open git fugitive
 vim.keymap.set("", "<leader>gv", "<cmd>Git<cr>", { desc = "Open vim-fuGITive" })
+vim.keymap.set("", "<leader>gD", "<cmd>Gvdiff<cr>", { desc = "[D]iff This ~" })
+vim.keymap.set("", "<leader>gd", "<cmd>Gvdiffsplit<cr>", { desc = "[D]iff This" })
+vim.keymap.set("", "<leader>ga", function()
+	local curFile = vim.fn.expand("%:p")
+	local cmd = "Git add " .. curFile
+	vim.cmd(cmd)
+	print("Staged: " .. curFile)
+end, { desc = "[A]dd This File" })
+vim.keymap.set("", "<leader>gr", function()
+	local curFile = vim.fn.expand("%:p")
+	local cmd = "Git reset " .. curFile
+	vim.cmd(cmd)
+	print("Unstaged: " .. curFile)
+end, { desc = "[R]emove This File" })
+vim.keymap.set("", "<leader>gC", function()
+	vim.ui.input({ prompt = "Git Commit Message: " }, function(commit_message)
+		local cmd = 'Git commit -m "' .. commit_message .. '"'
+		vim.cmd(cmd)
+	end)
+end, { desc = "[C]ommit" })
+vim.keymap.set("", "<leader>gP", function()
+	local curFile = vim.fn.expand("%:p")
+	local cmd = "Git push" .. curFile
+	vim.cmd(cmd)
+end, { desc = "[P]ush" })
+
 --  open a quick git dif for current file
 -- exists: <leader>ghd
 
