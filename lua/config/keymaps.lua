@@ -68,11 +68,7 @@ vim.keymap.set("", "<leader>gC", function()
 		vim.cmd(cmd)
 	end)
 end, { desc = "[C]ommit" })
-vim.keymap.set("", "<leader>gP", function()
-	local curFile = vim.fn.expand("%:p")
-	local cmd = "Git push" .. curFile
-	vim.cmd(cmd)
-end, { desc = "[P]ush" })
+vim.keymap.set("", "<leader>gP", "<cmd>Git push<cr>", { desc = "[P]ush" })
 
 --  open a quick git dif for current file
 -- exists: <leader>ghd
