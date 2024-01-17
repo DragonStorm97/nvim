@@ -231,6 +231,20 @@ return {
 		end,
 	},
 	{
+		"numToStr/Comment.nvim",
+		opts = {
+			-- add any options here
+			toggler = {
+				line = "gcc",
+				block = "gcb",
+			},
+		},
+		lazy = false,
+		config = function(_, opts)
+			require("Comment").setup(opts)
+		end,
+	},
+	{
 		"nvim-treesitter/nvim-treesitter",
 		dependencies = {
 			"windwp/nvim-ts-autotag",
