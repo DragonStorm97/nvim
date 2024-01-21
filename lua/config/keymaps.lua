@@ -56,16 +56,30 @@ vim.keymap.set("", "<leader>ga", function()
 	vim.cmd(cmd)
 	print("Staged: " .. curFile)
 end, { desc = "[A]dd This File" })
-vim.keymap.set("", "<leader>gr", function()
+vim.keymap.set("", "<leader>gu", function()
 	local curFile = vim.fn.expand("%:p")
-	local cmd = "Git reset " .. curFile
+	local cmd = "Git restore --staged " .. curFile
 	vim.cmd(cmd)
 	print("Unstaged: " .. curFile)
-end, { desc = "[R]emove This File" })
+end, { desc = "[U]nstage This File" })
+vim.keymap.set("", "<leader>gr", function()
+	local curFile = vim.fn.expand("%:p")
+	vim.ui.input({
+		prompt = "Confirm (y/n) revert " .. curFile,
+	}, function(choice)
+		if choice == "y" then
+			local cmd = "Git restore " .. curFile
+			vim.cmd(cmd)
+			print("Reverted: " .. curFile)
+		end
+	end)
+end, { desc = "[R]evert This File" })
 vim.keymap.set("", "<leader>gC", function()
 	vim.ui.input({ prompt = "Git Commit Message: " }, function(commit_message)
-		local cmd = 'Git commit -m "' .. commit_message .. '"'
-		vim.cmd(cmd)
+		if commit_message then
+			local cmd = 'Git commit -m "' .. commit_message .. '"'
+			vim.cmd(cmd)
+		end
 	end)
 end, { desc = "[C]ommit" })
 vim.keymap.set("", "<leader>gP", "<cmd>Git push<cr>", { desc = "[P]ush" })
