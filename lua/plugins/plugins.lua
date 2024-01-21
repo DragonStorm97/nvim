@@ -50,9 +50,7 @@ return {
 							-- fix for m$ paths:
 							-- local rel_path = vim.fn.fnamemodify(abs_path, ":~:.")
 							-- local path = string.gsub(rel_path, "\\", "/")
-							local path = abs_path
-							-- TODO: try and normalise to workspace_folder?
-							-- print(path)
+							local path = norm_path
 							local succuss, index = pcall(Marked.get_index_of, path)
 							if succuss and index and index > 0 then
 								return {
@@ -61,7 +59,6 @@ return {
 								}
 							else
 								return {}
-								-- return { text = "NOT IN HARPOON" }
 							end
 						end,
 					},
