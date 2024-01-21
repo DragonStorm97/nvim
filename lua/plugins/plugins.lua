@@ -10,7 +10,6 @@ return {
 	},
 	{
 		"tpope/vim-fugitive",
-		cmd = "Git",
 	},
 	{
 		"ThePrimeagen/harpoon",
