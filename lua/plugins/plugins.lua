@@ -3,6 +3,7 @@ return {
 		"tpope/vim-repeat",
 	},
 	{
+		-- shows colours for colour codes in code
 		"norcalli/nvim-colorizer.lua",
 		config = function()
 			require("colorizer").setup({ "*" }, {})
@@ -15,6 +16,19 @@ return {
 		"ThePrimeagen/harpoon",
 	},
 	{
+		-- changes colours depending on mode and motion
+		-- TODO: customise the colours to my preferences (mostly just want to change visual mode colour)
+		"rasulomaroff/reactive.nvim",
+		opts = {
+			builtin = {
+				cursorline = true,
+				cursor = true,
+				modemsg = true,
+			},
+		},
+	},
+	{
+		-- filetree with some nice shortcuts, and views
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
 		dependencies = {
@@ -367,6 +381,7 @@ return {
 					runInTerminal = true,
 					console = "integratedTerminal",
 				},
+				-- TODO: use a different executor than quickfix
 				cmake_executor = { -- executor to use
 					name = "quickfix", -- name of the executor
 					opts = {}, -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
