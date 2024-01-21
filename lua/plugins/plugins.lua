@@ -241,6 +241,7 @@ return {
 		end,
 	},
 	{
+		--  provides better comments, and motion-enabled comments (as well as block vs. line style comments)
 		"numToStr/Comment.nvim",
 		opts = {
 			-- add any options here
@@ -607,7 +608,7 @@ return {
       -- add a keymap to browse plugin files
       -- stylua: ignore
       {
-        "<leader>fp",
+        "<leader>fP",
         function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
         desc = "Find Plugin File",
       },
@@ -655,8 +656,8 @@ return {
 			end, { desc = "Update git [I]gnore" })
 		end,
 	},
-
 	{
+		-- folding! TODO: comment folding?
 		"kevinhwang91/nvim-ufo",
 		dependencies = "kevinhwang91/promise-async",
 		opts = {
@@ -782,6 +783,7 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 	{
+		-- shows the AST for the file
 		"nvim-treesitter/playground",
 		cmd = "TSPlayground",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -834,6 +836,7 @@ return {
 		end,
 	},
 	{
+		-- a markdown previewer
 		"ellisonleao/glow.nvim",
 		config = function()
 			local ok, mason_registry = pcall(require, "mason-registry")
@@ -850,6 +853,7 @@ return {
 		cmd = "Glow",
 	},
 	{
+		-- TODO: undotree isn't working (also, give it a keybind)
 		"mbbill/undotree",
 		cmd = "UndotreeToggle",
 		enabled = true,
