@@ -257,6 +257,7 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
 		dependencies = {
 			"windwp/nvim-ts-autotag",
 		},
@@ -311,6 +312,16 @@ return {
 				opts.auto_install = true
 				opts.highlight.enable = true
 				opts.highlight.additional_vim_regex_highlighting = false
+				opts.indent.enable = true
+				opts.incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "\\",
+						node_incremental = "\\",
+						scope_incremental = false,
+						node_decremental = "<bs>",
+					},
+				}
 			end
 		end,
 	},
