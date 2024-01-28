@@ -81,6 +81,7 @@ M.setup = function()
 	vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<cr>", bufopts("Find references"))
 	vim.keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<cr>", bufopts("Find Implemenations"))
 	vim.keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<cr>", bufopts("Find Type Definitions"))
+	vim.keymap.set("n", "gl", vim.diagnostic.open_float, bufopts("Open Float"))
 	vim.keymap.set("n", "gK", vim.lsp.buf.hover, bufopts("Hover"))
 	vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, bufopts("Get Signature Help"))
 	-- vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts("Add Workspace Folder"))
@@ -97,7 +98,7 @@ M.setup = function()
 		dot_repeatable("n", "<Plug>(LspRename)", vim.lsp.buf.rename),
 		{ desc = "Rename", remap = true }
 	)
-	vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, bufopts("Code Action"))
+	vim.keymap.set({ "n", "v" }, "<leader>cA", vim.lsp.buf.code_action, bufopts("Code Action"))
 
 	-- show diagnostics in hover window
 	vim.api.nvim_create_autocmd("CursorHold", {
