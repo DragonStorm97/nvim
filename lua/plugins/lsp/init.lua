@@ -813,7 +813,6 @@ return {
 			{ "nvim-tree/nvim-web-devicons", lazy = true },
 		},
 		opts = {
-			ui = { border = "rounded" },
 			symbol_in_winbar = { enable = false },
 			lightbulb = {
 				enable = true,
@@ -823,6 +822,10 @@ return {
 				layout = "float",
 				max_height = 0.7,
 				left_width = 0.4,
+			},
+			ui = {
+				border = "rounded",
+				kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
 			},
 		},
 		keys = {

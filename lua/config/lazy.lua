@@ -56,7 +56,8 @@ require("lazy").setup({
 			dependencies = {
 				"folke/noice.nvim",
 			},
-			lazy = true,
+			-- lazy = true,
+			lazy = false,
 			name = "catppuccin",
 			priority = 1000,
 			opts = {
@@ -92,6 +93,11 @@ require("lazy").setup({
 					telescope = true,
 					treesitter = true,
 					hop = true,
+					harpoon = true,
+					lsp_saga = true,
+					-- lualine = true,
+					treesitter_context = true,
+					ufo = true,
 				},
 			},
 		},
