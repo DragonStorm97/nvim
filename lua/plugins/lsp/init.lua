@@ -126,12 +126,24 @@ return {
 		},
 		config = function()
 			vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-				pattern = { "*.cpp", "*.hpp", "*.h", "*.hxx", "*.cxx", "*.c" },
+				pattern = { "*.cpp", "*.hpp", "*.h", "*.hxx", "*.cxx", "*.c", "*/include/*" },
 				desc = "Add cpp-tools keymaps",
 				group = vim.api.nvim_create_augroup("CppToolsKeymaps", { clear = true }),
 				callback = function(opts)
 					local fpt = vim.bo[opts.buf].filetype
-					if fpt == "cpp" or fpt == "hpp" or fpt == "h" or fpt == "hxx" or fpt == "cxx" or fpt == "c" then
+					if fpt == "" then
+						vim.cmd([[set ft=cpp]])
+						fpt = "cpp"
+					end
+					if
+						fpt == "cpp"
+						or fpt == "hpp"
+						or fpt == "h"
+						or fpt == "hxx"
+						or fpt == "cxx"
+						or fpt == "c"
+						or fpt == ""
+					then
 						local kopts = function(desc)
 							return { desc = desc, silent = true, buffer = opts.buf }
 						end
