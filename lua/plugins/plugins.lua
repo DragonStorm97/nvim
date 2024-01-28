@@ -439,7 +439,6 @@ return {
 		end,
 		-- event = "BufRead",
 	},
-	{ "nvimdev/lspsaga.nvim" },
 	{ "hrsh7th/cmp-nvim-lsp" },
 	{ "hrsh7th/cmp-buffer" },
 	{ "hrsh7th/cmp-path" },
@@ -491,7 +490,6 @@ return {
 					{ name = "nvim_lsp" },
 					{ name = "luasnip" },
 					{ name = "nvim_lua" },
-					{ name = "crates" },
 					-- { name = "vsnip" }, -- For vsnip users.
 				}, {
 					{ name = "buffer" },
@@ -517,6 +515,20 @@ return {
 				{ name = "crates" },
 			}))
 		end,
+	},
+	-- provides some usefull textobjects like gC for comments
+	{
+		"chrisgrieser/nvim-various-textobjs",
+		lazy = false,
+		keys = {
+			{
+				"gC",
+				"<cmd>lua require('various-textobjs').multiCommentedLines()<CR>",
+				mode = { "o", "x" },
+				desc = "text-object multiCommentedLines",
+			},
+		},
+		opts = { useDefaultKeymaps = true, disabledKeymaps = { "gc" } },
 	},
 	{
 		"ThePrimeagen/refactoring.nvim",

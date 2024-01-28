@@ -794,4 +794,32 @@ return {
 			})
 		end,
 	},
+	{
+		"nvimdev/lspsaga.nvim",
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			{ "nvim-tree/nvim-web-devicons", lazy = true },
+		},
+		opts = {
+			ui = { border = "rounded" },
+			symbol_in_winbar = { enable = false },
+			lightbulb = {
+				enable = true,
+				sign = true,
+			},
+			outline = {
+				layout = "float",
+				max_height = 0.7,
+				left_width = 0.4,
+			},
+		},
+		keys = {
+			{ "<leader>cb", "<Cmd>Lspsaga show_buf_diagnostics<CR>", desc = "Diagnostics: Show buffer's" },
+			{ "<leader>cf", "<Cmd>Lspsaga finder<CR>", desc = "Find references" },
+			{ "<leader>cp", "<Cmd>Lspsaga peek_definition<CR>", desc = "Peek definition" },
+			{ "<leader>ct", "<Cmd>Lspsaga peek_type_definition<CR>", desc = "Peek type definition" },
+			{ "<leader>co", "<Cmd>Lspsaga outline<CR>", desc = "Show file outline - 'e' to jump, 'o' to toggle" },
+			{ "<leader>ca", "<cmd>Lspsaga code_action<CR>", mode = { "n", "v" }, desc = "Show code action" },
+		},
+	},
 }
