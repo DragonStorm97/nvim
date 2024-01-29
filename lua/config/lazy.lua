@@ -134,8 +134,8 @@ require("lazy").setup({
 })
 
 -- set colorscheme:
-vim.cmd.colorscheme("tokyonight-moon")
--- vim.cmd.colorscheme("catppuccin-mocha")
+-- vim.cmd.colorscheme("tokyonight-moon")
+vim.cmd.colorscheme("catppuccin-mocha")
 
 vim.o.foldcolumn = "1" -- '0' is not bad
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value

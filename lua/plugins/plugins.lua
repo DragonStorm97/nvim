@@ -684,6 +684,7 @@ return {
 		-- folding! TODO: comment folding?
 		"kevinhwang91/nvim-ufo",
 		dependencies = "kevinhwang91/promise-async",
+		event = "VimEnter",
 		opts = {
 			filetype_exclude = {
 				"help",
