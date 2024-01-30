@@ -30,7 +30,7 @@ return {
 	{
 		-- filetree with some nice shortcuts, and views
 		"nvim-neo-tree/neo-tree.nvim",
-		branch = "v3.x",
+		-- branch = "v3.x",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
@@ -337,9 +337,6 @@ return {
 			require("luasnip.loaders.from_vscode").lazy_load()
 		end,
 	},
-	{
-		"saadparwaiz1/cmp_luasnip",
-	},
 	-- {
 	-- 	"nvimtools/none-ls.nvim",
 	-- 	opts = function(_, opts)
@@ -440,10 +437,6 @@ return {
 		end,
 		-- event = "BufRead",
 	},
-	{ "hrsh7th/cmp-nvim-lsp" },
-	{ "hrsh7th/cmp-buffer" },
-	{ "hrsh7th/cmp-path" },
-	{ "hrsh7th/cmp-cmdline" },
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -453,10 +446,82 @@ return {
 				-- config = true,
 			},
 			{ "neovim/nvim-lspconfig" },
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/cmp-nvim-lsp-document-symbol" },
+			{ "hrsh7th/cmp-nvim-lua" },
+			{ "hrsh7th/cmp-buffer" },
+			{ "hrsh7th/cmp-path" },
+			{ "hrsh7th/cmp-cmdline" },
+			{ "saadparwaiz1/cmp_luasnip" },
+			{ "f3fora/cmp-spell" },
+			{ "uga-rosa/cmp-dictionary" },
 		},
 		config = function()
 			local cmp = require("cmp")
+
+			local types = require("cmp.types")
+			local LSP_TYPES = {
+				types.lsp.CompletionItemKind.Method,
+				types.lsp.CompletionItemKind.Field,
+				types.lsp.CompletionItemKind.Property,
+				types.lsp.CompletionItemKind.Function,
+			}
+
+			local has_words_before = function()
+				local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+				return col ~= 0
+					and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+			end
+
+			local luasnip = require("luasnip")
+
+			local function tab(fallback)
+				if cmp.visible() then
+					if #cmp.get_entries() == 1 then
+						cmp.confirm({ select = true })
+					else
+						cmp.select_next_item()
+					end
+				elseif luasnip.expand_or_jumpable() then
+					luasnip.expand_or_jump()
+				elseif has_words_before() then
+					cmp.complete()
+				else
+					-- F("<Tab>")
+					fallback()
+				end
+			end
+
+			local function shtab(fallback)
+				if cmp.visible() then
+					cmp.select_prev_item()
+				elseif luasnip.jumpable(-1) then
+					luasnip.jump(-1)
+				else
+					-- F('<S-Tab>')
+					fallback()
+				end
+			end
+
+			local function enterit(fallback)
+				if cmp.visible() and cmp.get_selected_entry() then
+					cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+				elseif cmp.visible() then
+					cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
+				elseif has_words_before() then
+					cmp.complete()
+				else
+					-- F("<CR>")
+					fallback()
+				end
+			end
+			vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
 			cmp.setup({
+				enabled = true,
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
+				preselect = cmp.PreselectMode.Item,
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
@@ -466,41 +531,117 @@ return {
 					completion = cmp.config.window.bordered(),
 					documentation = cmp.config.window.bordered(),
 				},
-				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
+				formatting = {
+					--- @type cmp.ItemField[]
+					fields = {
+						"kind",
+						"abbr",
+						"menu",
+					},
+					format = function(entry, vim_item)
+						local icons = require("lazyvim.config").icons.kinds
+						if icons[vim_item.kind] then
+							vim_item.kind = icons[vim_item.kind] .. vim_item.kind
+						end
+						vim_item.menu = ({
+							nvim_lsp = "[LSP]",
+							nvim_lsp_signature_help = "[LSP-Sig]",
+							nvim_lua = "[nvim]",
+							emoji = "[emoji]",
+							path = "[path]",
+							Crates = "[Crates]",
+							calc = "[calc]",
+							cmp_git = "[git]",
+							cmp_tabnine = "[tab9]",
+							vsnip = "[snip]",
+							luasnip = "[snip]",
+							buffer = "[buf]",
+							fzy_buffer = "[fzbuf]",
+							fuzzy_path = "[fzpath]",
+							dictionary = "[dict]",
+							spell = "[spell]",
+							cmdline = "[cmd]",
+							cmdline_history = "[cmd-hist]",
+						})[entry.source.name]
+						vim_item.dup = ({
+							buffer = 1,
+							path = 1,
+							nvim_lsp = 0,
+						})[entry.source.name] or 0
+						return vim_item
+					end,
+				},
+				mapping = {
+					["<C-f>"] = cmp.mapping.scroll_docs(-4),
+					["<C-b>"] = cmp.mapping.scroll_docs(4),
+					["<CR>"] = cmp.mapping({
+						i = function(fallback)
+							if cmp.visible() and cmp.get_active_entry() then
+								cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+							else
+								fallback()
+							end
+						end,
+						s = cmp.mapping.confirm({ select = true }),
+						c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+					}),
+					["<C-Space>"] = cmp.mapping(enterit, { "i", "s" }),
 					["<C-e>"] = cmp.mapping.abort(),
-					["<C-y>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-					["<Tab>"] = function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						else
-							fallback()
-						end
-					end,
-					["<S-Tab>"] = function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						else
-							fallback()
-						end
-					end,
-				}),
+					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<Tab>"] = cmp.mapping(tab, { "i", "s", "c" }),
+					["<S-Tab>"] = cmp.mapping(shtab, { "i", "s", "c" }),
+					["<Down>"] = cmp.mapping(tab, { "i", "s", "c" }),
+					["<Up>"] = cmp.mapping(shtab, { "i", "s", "c" }),
+				},
 				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
 					{ name = "nvim_lua" },
+					{ name = "nvim_lsp" },
+					{ name = "nvim_lsp_signature_help" },
+					{ name = "crates" },
+					{ name = "path" },
+					{ name = "luasnip" },
+					{ name = "buffer", keyword_length = 3 },
 					-- { name = "vsnip" }, -- For vsnip users.
 				}, {
-					{ name = "buffer" },
+					-- { name = "buffer", keyword_length = 3 },
+					-- { name = "buffer" },
 				}),
+				experimental = {
+					ghost_text = {
+						hl_group = "CmpGhostText",
+					},
+				},
 				sorting = {
 					comparators = {
+						--- Always rank snippets below methods and fields.
+						--- @param e1 cmp.Entry
+						--- @param e2 cmp.Entry
+						--- @return boolean|nil
+						function(e1, e2)
+							local e1_kind = e1:get_kind()
+							local e2_kind = e2:get_kind()
+							if e1_kind == e2_kind then
+								return nil
+							end
+							if
+								e1_kind ~= types.lsp.CompletionItemKind.Snippet
+								and e2_kind ~= types.lsp.CompletionItemKind.Snippet
+							then
+								return nil
+							end
+							if vim.tbl_contains(LSP_TYPES, e1_kind) then
+								return true
+							elseif vim.tbl_contains(LSP_TYPES, e2_kind) then
+								return false
+							end
+							return nil
+						end,
+						require("clangd_extensions.cmp_scores"),
 						cmp.config.compare.offset,
 						cmp.config.compare.exact,
+						cmp.config.compare.score,
 						cmp.config.compare.recently_used,
-						require("clangd_extensions.cmp_scores"),
+						cmp.config.compare.locality,
 						cmp.config.compare.kind,
 						cmp.config.compare.sort_text,
 						cmp.config.compare.length,
@@ -508,13 +649,49 @@ return {
 					},
 				},
 			})
+
+			-- cmp plugin
+			cmp.setup.filetype("gitcommit", {
+				sources = cmp.config.sources({
+					{ name = "cmp_git" },
+					{ name = "nvim_lsp" },
+					{ name = "nvim_lua" },
+					{ name = "nvim_lsp_document_symbol" },
+					{ name = "buffer" },
+					{ name = "dictionary" },
+					{ name = "spell" },
+					{ name = "path" },
+				}),
+			})
+
+			cmp.setup.cmdline({ "/", "?" }, {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = {
+					{ name = "nvim_lsp" },
+					{ name = "nvim_lsp_document_symbol" },
+					{ name = "dictionary" },
+					{ name = "buffer" },
+				},
+			})
+
+			---@type cmp.ConfigSchema
+			cmp.setup.cmdline(":", {
+				completion = {
+					autocomplete = { "InsertEnter" },
+				},
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
+					{ name = "cmdline" },
+					{ name = "path", options = { trailing_slash = true, label_trailing_slash = true } },
+					{ name = "dictionary" },
+					{ name = "buffer" },
+				}),
+			})
 		end,
 		---@param opts cmp.ConfigSchema
 		opts = function(_, opts)
 			local cmp = require("cmp")
-			opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
-				{ name = "crates" },
-			}))
+			-- opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {}))
 		end,
 	},
 	-- provides some usefull textobjects like gC for comments

@@ -495,6 +495,7 @@ return {
 							usePlaceholders = true,
 							completeUnimported = true,
 							clangdFileStatus = true,
+							fallbackFlags = { "--std=c++23" },
 						},
 						root_dir = function(fname)
 							return require("lspconfig.util").root_pattern(
