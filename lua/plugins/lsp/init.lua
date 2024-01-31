@@ -482,20 +482,31 @@ return {
 							vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 						end,
 						capabilities = capabilities_cpp,
-						-- cmd = {
-						-- 	"clangd",
-						-- 	"--background-index",
-						-- 	"--clang-tidy",
-						-- 	"--header-insertion=iwyu",
-						-- 	"--completion-style=detailed",
-						-- 	"--function-arg-placeholders",
-						-- 	"--fallback-style=llvm",
-						-- },
+						cmd = {
+							"clangd",
+							"--background-index",
+							"--background-index-priority=normal",
+							-- "--all-scopes-completion",
+							"--clang-tidy",
+							"--header-insertion=iwyu", --/never
+							"--header-insertion-decorators",
+							"--completion-style=detailed", --/bundled (groups overloads/etc.)
+							"--function-arg-placeholders",
+							"-j=12",
+							-- "--pch-storage=memory",
+							-- "limit-references=1000",
+							-- "limit-results=100",
+							-- "rename-file-limit=50",
+							-- "fallback-stule=llvm" -- used if no .clang-format file exists
+							-- "project-root=...",
+						},
 						init_options = {
 							usePlaceholders = true,
 							completeUnimported = true,
 							clangdFileStatus = true,
-							fallbackFlags = { "--std=c++23" },
+							fallbackFlags = {
+								"--std=c++20",
+							},
 						},
 						root_dir = function(fname)
 							return require("lspconfig.util").root_pattern(
