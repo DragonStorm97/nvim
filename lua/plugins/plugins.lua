@@ -517,7 +517,7 @@ return {
 			end
 			vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
 			cmp.setup({
-				enabled = true,
+				-- enabled = true,
 				completion = {
 					completeopt = "menu,menuone,noinsert",
 				},
@@ -583,15 +583,15 @@ return {
 							end
 						end,
 						s = cmp.mapping.confirm({ select = true }),
-						c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+						-- c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
 					}),
 					["<C-Space>"] = cmp.mapping(enterit, { "i", "s" }),
 					["<C-e>"] = cmp.mapping.abort(),
 					["<C-y>"] = cmp.mapping.confirm({ select = true }),
 					["<Tab>"] = cmp.mapping(tab, { "i", "s", "c" }),
 					["<S-Tab>"] = cmp.mapping(shtab, { "i", "s", "c" }),
-					["<Down>"] = cmp.mapping(tab, { "i", "s", "c" }),
-					["<Up>"] = cmp.mapping(shtab, { "i", "s", "c" }),
+					["<Down>"] = cmp.mapping.select_next_item(), --cmp.mapping(tab, { "i", "s", "c" }),
+					["<Up>"] = cmp.mapping(shtab, { "i", "s" }),
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lua" },
@@ -695,6 +695,7 @@ return {
 		end,
 	},
 	-- provides some usefull textobjects like gC for comments
+	-- TODO: remove this as mini.ai should do so already?
 	{
 		"chrisgrieser/nvim-various-textobjs",
 		lazy = false,
