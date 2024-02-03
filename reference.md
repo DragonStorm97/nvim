@@ -412,12 +412,19 @@ Install glow
 - `<M-f>` = open :HopPattern
 - `<M-w>/<leader>wp` = Pick & jump to window
 - `<C-p>` = open telescope file picker
+- `<C-/>` and `?` in insert and normal mode, to show the actions mapped to your picker.
 
 ### -- insert mode
 
 - `<M-p>` = open neoclip in insert mode
 - `<C-h>` = `<C-Left>` = Move Cursor to start of Previous Word
 - `<C-l>` = `<C-Right>` = Move Cursor to start of Next Word
+- `<C-t>` = tab line in insert mode
+- `<C-d>` = shift-tab line in insert mode
+- `<C-w>` = delete word behind (insert mode)
+- `<C-u>` = delete line behind cursor (insert mode)
+- `<C-x>` = completion menu/list!
+- `<C-x><C-O>` = omni-completion
 
 ### --normal mode
 
