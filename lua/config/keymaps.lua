@@ -83,6 +83,7 @@ vim.keymap.set("", "<leader>gC", function()
 	end)
 end, { desc = "[C]ommit" })
 vim.keymap.set("", "<leader>gP", "<cmd>Git push<cr>", { desc = "[P]ush" })
+vim.keymap.set("", "<leader>gb", "<cmd>Telescope git_branches<cr>", { desc = "[B]ranches" })
 
 --  open a quick git dif for current file
 -- exists: <leader>ghd
@@ -149,7 +150,7 @@ vim.keymap.set("n", "<leader>S", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], {
 -- vim.keymap.set("x", "<leader>S", [[ry<cmd>%s/\<<C-r>r\>//gI<Left><Left><Left>]], { desc = "Replace Word Under Cursor" })
 
 -- list workspace symbols:
-vim.keymap.set("n", "gs", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Open Document [S]ymbols" })
+vim.keymap.set("n", "gS", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Open Document [S]ymbols" })
 
 -- harpoon keymaps:
 local mark = require("harpoon.mark")
