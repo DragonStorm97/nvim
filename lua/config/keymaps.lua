@@ -2,6 +2,9 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+vim.keymap.set({ "i", "x", "v" }, "<S-down>", "<down>", { desc = "ONLY DOWN" })
+vim.keymap.set({ "i", "x", "v" }, "<S-up>", "<up>", { desc = "ONLY UP" })
+
 -- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
 -- vim.keymap.set("n", "zR", require("ufo").openAllFolds, {
 -- 	desc = "Open all Folds",
@@ -30,6 +33,7 @@ vim.keymap.set("", "<C-p>", function()
 	require("telescope.builtin").find_files()
 end, { desc = "Open File Picker" })
 
+-- TODO?
 -- macroscope is actually from neoclip, oh well
 -- vim.keymap.set("n", "<leader>@", function()
 -- 	require("telescope").extensions.macroscope.default()
@@ -84,6 +88,7 @@ vim.keymap.set("", "<leader>gC", function()
 end, { desc = "[C]ommit" })
 vim.keymap.set("", "<leader>gP", "<cmd>Git push<cr>", { desc = "[P]ush" })
 vim.keymap.set("", "<leader>gb", "<cmd>Telescope git_branches<cr>", { desc = "[B]ranches" })
+vim.keymap.set("", "<leader>gS", "<cmd>Git status<cr>", { desc = "[S]tatus" })
 
 --  open a quick git dif for current file
 -- exists: <leader>ghd

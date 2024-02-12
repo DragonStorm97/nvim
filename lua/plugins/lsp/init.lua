@@ -842,7 +842,7 @@ return {
 		},
 		keys = {
 			{ "<leader>cb", "<Cmd>Lspsaga show_buf_diagnostics<CR>", desc = "Diagnostics: Show buffer's" },
-			{ "<leader>cf", "<Cmd>Lspsaga finder<CR>", desc = "Find references" },
+			{ "<leader>ch", "<Cmd>Lspsaga finder<CR>", desc = "Find references" },
 			{ "<leader>cp", "<Cmd>Lspsaga peek_definition<CR>", desc = "Peek definition" },
 			{ "<leader>ct", "<Cmd>Lspsaga peek_type_definition<CR>", desc = "Peek type definition" },
 			{ "<leader>co", "<Cmd>Lspsaga outline<CR>", desc = "Show file outline - 'e' to jump, 'o' to toggle" },
