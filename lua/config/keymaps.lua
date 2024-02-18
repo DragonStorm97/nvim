@@ -52,7 +52,7 @@ vim.keymap.set("", "<leader>md", "<cmd>Glow<cr>", { desc = "Open Glow Markdown P
 
 -- open git fugitive
 vim.keymap.set("", "<leader>gv", "<cmd>Git<cr>", { desc = "Open vim-fuGITive" })
-vim.keymap.set("", "<leader>gD", "<cmd>Gvdiff<cr>", { desc = "[D]iff This ~" })
+vim.keymap.set("", "<leader>gD", "<cmd>DiffviewFileHistory<cr>", { desc = "[D]iffview" })
 vim.keymap.set("", "<leader>gd", "<cmd>Gvdiffsplit<cr>", { desc = "[D]iff This" })
 vim.keymap.set("", "<leader>ga", function()
 	local curFile = vim.fn.expand("%:p")
@@ -79,10 +79,20 @@ vim.keymap.set("", "<leader>gr", function()
 	end)
 end, { desc = "[R]evert This File" })
 vim.keymap.set("", "<leader>gC", function()
-	vim.ui.input({ prompt = "Git Commit Message: " }, function(commit_message)
-		if commit_message then
-			local cmd = 'Git commit -m "' .. commit_message .. '"'
-			vim.cmd(cmd)
+	vim.ui.input({ prompt = "Git Commit Message: " }, function(msg)
+		if not msg then
+			return
+		end
+		local results = vim.system({ "git", "commit", "-m", msg }, { text = true }):wait()
+
+		if results.code ~= 0 then
+			vim.notify(
+				"Commit failed with the message: \n" .. vim.trim(results.stdout .. "\n" .. results.stderr),
+				vim.log.levels.ERROR,
+				{ title = "Commit" }
+			)
+		else
+			vim.notify(results.stdout, vim.log.levels.INFO, { title = "Commit" })
 		end
 	end)
 end, { desc = "[C]ommit" })

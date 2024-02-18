@@ -1425,4 +1425,9 @@ return {
 			-- configuration goes here
 		},
 	},
+	-- diffview
+	{
+		"sindrets/diffview.nvim",
+		config = true,
+	},
 }
