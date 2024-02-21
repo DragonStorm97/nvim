@@ -129,7 +129,7 @@ vim.keymap.set("n", "<S-h>", "<C-Left>", { desc = "Move Cursor to start of Previ
 vim.keymap.set("n", "<S-l>", "<C-Right>", { desc = "Move Cursor to start of Next Word" })
 --vim.keymap.set("i", "<C-l>", "<C-Right>", { desc = "Move Cursor to start of Next Word" })
 
-vim.keymap.set("n", "<c-a>", "ggVG", { desc = "Select All" })
+-- vim.keymap.set("n", "<c-a>", "ggVG", { desc = "Select All" })
 
 -- some ThePrimeagen maps:
 -- move selected lines in Visual mode
