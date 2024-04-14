@@ -947,7 +947,8 @@ return {
 				enable_get_fold_virt_text = true,
 				fold_virt_text_handler = handler,
 				open_fold_hl_timeout = 150,
-				close_fold_kinds = { "imports", "comment" },
+				-- close_fold_kinds = { "imports", "comment" },
+				-- close_fold_kinds_for_ft = { "imports", "comment" },
 
 				preview = {
 					win_config = {
@@ -961,9 +962,9 @@ return {
 					},
 				},
 				-- TODO: try and setup lsp capabilities for folding instead
-				-- provider_selector = function(bufnr, filetype, buftype)
-				-- 	return ftMap[filetype] or { "treesitter", "indent" }
-				-- end,
+				provider_selector = function(bufnr, filetype, buftype)
+					return ftMap[filetype] or { "treesitter", "indent" }
+				end,
 			})
 		end,
 	},
@@ -1029,7 +1030,7 @@ return {
 		},
 		config = function()
 			require("obsidian").setup({
-				-- dir = "~/OneDrive/ObsidianMasterVault", -- no need to call 'vim.fn.expand' here
+				dir = "~/onedrive/obsidianmastervault", -- no need to call 'vim.fn.expand' here
 				-- Optional, key mappings.
 				mappings = {
 					-- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
