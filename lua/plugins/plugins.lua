@@ -152,8 +152,9 @@ return {
 	},
 	{
 		"hedyhli/outline.nvim",
-		lazy = true,
+		lazy = false,
 		cmd = { "Outline", "OutlineOpen" },
+		-- TODO: :Outline works fine, but this makes edge complain about failing to rename buffer
 		keys = { { "<leader>cs", "<cmd>Outline<cr>", desc = "Symbols Outline" } },
 		config = true,
 	},

@@ -4,8 +4,9 @@
 
 choco install ripgrep
 choco install sed
-choco install mingw (or try and get clang or VSC++ in path)
+choco install mysy2 (or try and get clang or VSC++ in path)
 choco install Glow (not actually sure if it's in chocolatey)
+choco install curl (windows default curl is too old to support --HTTP2)
 
 ## Lazy vim/Neovim plugins
 
@@ -424,6 +425,7 @@ Install glow
 - `<C-w>` = delete word behind (insert mode)
 - `<C-u>` = delete line behind cursor (insert mode)
 - `<C-x>` = completion menu/list!
+- `<C-x><C-F>` = directory completion list
 - `<C-x><C-O>` = omni-completion
 
 ### --normal mode
