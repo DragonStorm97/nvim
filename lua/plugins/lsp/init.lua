@@ -39,6 +39,10 @@ return {
 				"hadolint",
 				"dockerfile-language-server",
 				"rust-analyzer",
+				-- "phpactor",
+				"phpcs",
+				"php-cs-fixer",
+				"blade-formatter",
 			},
 		},
 		config = function(_, opts)
@@ -67,6 +71,10 @@ return {
 				"yaml-language-server",
 				"gopls",
 				"editorconfig-checker",
+				-- "phpactor",
+				"phpcs",
+				"php-cs-fixer",
+				"blade-formatter",
 			}
 			local function ensure_installed()
 				for _, package in ipairs(packages) do
@@ -263,6 +271,53 @@ return {
 		config = function() end,
 	},
 	{
+		"adalessa/laravel.nvim",
+		dependencies = {
+			"nvim-telescope/telescope.nvim",
+			"tpope/vim-dotenv",
+			"MunifTanjim/nui.nvim",
+			"nvimtools/none-ls.nvim",
+		},
+		cmd = { "Sail", "Artisan", "Composer", "Npm", "Yarn", "Laravel" },
+		keys = {
+			{ "<leader>cl", "<leader>cl", desc = "Laravel" },
+			{ "<leader>cla", ":Laravel artisan<cr>", desc = "Laravel Artisan" },
+			{ "<leader>clr", ":Laravel routes<cr>", desc = "Laravel Routes" },
+			{ "<leader>clm", ":Laravel related<cr>", desc = "Laravel Related" },
+		},
+		event = { "VeryLazy" },
+		config = true,
+	},
+	{
+		"gbprod/phpactor.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- required to update phpactor
+			"neovim/nvim-lspconfig", -- required to automaticly register lsp serveur
+		},
+		build = ':lua require("phpactor.handler.update")', -- To install/update phpactor when installing this plugin
+		config = function()
+			require("phpactor").setup({
+				install = {
+					-- note that I modified the plugin to add php as the first command so it actually works...
+					path = vim.fn.stdpath("data") .. "/php/",
+					-- path = "D:/Programming/php", --vim.fn.stdpath("data") .. "/phpactor/",
+					branch = "master",
+					-- bin = vim.fn.stdpath("data") .. "/php/phpactor/bin/phpactor",
+					-- bin = nil,
+					bin = "D:/Programming/php/phpactor/bin/phpactor",
+					php_bin = "php",
+					composer_bin = "composer",
+					git_bin = "git",
+					check_on_startup = "none",
+				},
+				lspconfig = {
+					enabled = true,
+					options = {},
+				},
+			})
+		end,
+	},
+	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = {
@@ -281,6 +336,7 @@ return {
 				},
 				{ "Saecki/crates.nvim" },
 				{ "b0o/SchemaStore.nvim" },
+				{ "adalessa/laravel.nvim" },
 				"jose-elias-alvarez/typescript.nvim",
 				init = function()
 					require("lazyvim.util").on_attach(function(_, buffer)
@@ -342,6 +398,7 @@ return {
 				gopls = {},
 				-- Ensure mason installs the server
 				clangd = {},
+				phpactor = {},
 			},
 			setup = {
 				tsserver = function(_, opts)
@@ -367,6 +424,7 @@ return {
 				"tsserver",
 				"yamlls",
 				"rust_analyzer",
+				-- "phpactor",
 			},
 		},
 		config = function(_, opts)
@@ -374,6 +432,8 @@ return {
 			local lspconfig = require("lspconfig")
 			local lsp_utils = require("plugins.lsp.lsp-utils")
 			lsp_utils.setup()
+
+			-- lspconfig.phpactor.setup({})
 
 			mason_lspconfig.setup(opts)
 

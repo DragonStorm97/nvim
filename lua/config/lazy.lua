@@ -144,7 +144,7 @@ vim.o.foldenable = true
 
 -- set the default shell:
 -- NOTE: using powershell as the shell breaks rust run stuff :(
--- vim.opt.shell = "powershell"
+vim.opt.shell = "powershell"
 
 require("nvim-treesitter.configs").setup({
 	-- A list of parser names, or "all"
@@ -180,6 +180,7 @@ require("nvim-treesitter.configs").setup({
 		"markdown",
 		"markdown_inline",
 		"ocaml",
+		"php",
 		"python",
 		"query",
 		"regex",
