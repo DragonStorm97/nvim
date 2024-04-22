@@ -243,3 +243,5 @@ vim.keymap.set({ "n", "v" }, "<leader>T", "<cmd>Telescope<cr>", { desc = "Open [
 vim.keymap.set({ "n", "v" }, "<leader>C", vim.diagnostic.open_float, { desc = "Open Diagnostic Float" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to Previous Diagnostic" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to Next Diagnostic" })
+
+vim.keymap.set("v", "<c-C>", "y", { desc = "CTRL+C yanks in visual mode" })
