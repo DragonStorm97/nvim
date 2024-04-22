@@ -26,7 +26,8 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.test.core" },
 		{ import = "lazyvim.plugins.extras.lang.docker" },
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
-		{ import = "lazyvim.plugins.extras.lsp.none-ls" },
+		-- { import = "lazyvim.plugins.extras.lsp.none-ls" },
+		{ import = "lazyvim.plugins.extras.editor.mini-diff" },
 		-- { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
 		{
@@ -144,7 +145,9 @@ vim.o.foldenable = true
 
 -- set the default shell:
 -- NOTE: using powershell as the shell breaks rust run stuff :(
-vim.opt.shell = "powershell"
+if jit.os ~= "Linux" then
+	vim.opt.shell = "powershell"
+end
 
 require("nvim-treesitter.configs").setup({
 	-- A list of parser names, or "all"

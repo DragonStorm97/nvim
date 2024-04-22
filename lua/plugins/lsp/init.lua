@@ -39,9 +39,10 @@ return {
 				"hadolint",
 				"dockerfile-language-server",
 				"rust-analyzer",
-				-- "phpactor",
+				"phpactor",
 				"phpcs",
 				"php-cs-fixer",
+				"php-debug-adapter",
 				"blade-formatter",
 			},
 		},
@@ -49,6 +50,7 @@ return {
 			require("mason").setup(opts)
 			local mr = require("mason-registry")
 			local packages = {
+				"stylua",
 				"bash-language-server",
 				"black",
 				"clang-format",
@@ -71,9 +73,10 @@ return {
 				"yaml-language-server",
 				"gopls",
 				"editorconfig-checker",
-				-- "phpactor",
+				"phpactor",
 				"phpcs",
 				"php-cs-fixer",
+				"php-debug-adapter",
 				"blade-formatter",
 			}
 			local function ensure_installed()
@@ -299,12 +302,13 @@ return {
 			require("phpactor").setup({
 				install = {
 					-- note that I modified the plugin to add php as the first command so it actually works...
-					path = vim.fn.stdpath("data") .. "/php/",
+					path = vim.fn.stdpath("data") .. "/mason/",
 					-- path = "D:/Programming/php", --vim.fn.stdpath("data") .. "/phpactor/",
 					branch = "master",
+					bin = vim.fn.stdpath("data") .. "/mason/bin/phpactor",
 					-- bin = vim.fn.stdpath("data") .. "/php/phpactor/bin/phpactor",
 					-- bin = nil,
-					bin = "D:/Programming/php/phpactor/bin/phpactor",
+					-- bin = "D:/Programming/php/phpactor/bin/phpactor",
 					php_bin = "php",
 					composer_bin = "composer",
 					git_bin = "git",
