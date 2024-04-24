@@ -81,6 +81,7 @@ choco install curl (windows default curl is too old to support --HTTP2)
 - `gw` = search for word under cursor
 - `m{a-zA-Z}` = create marker, stored in `{a-zA-Z}`
 - `'{a-zA-Z}` = Jump to marker stored in `{a-zA-Z}`
+- `<C-6>` = switch to alternate file
 - `H/L` = switch to Prev/Next buffer
 - `gc{motion|c}` = comment (`gcc` = comment line)
 - `J` = merge line below (remove this line's EOL)
