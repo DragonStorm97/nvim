@@ -166,6 +166,8 @@ choco install curl (windows default curl is too old to support --HTTP2)
 - `p` = paste OVER selection (replacing it!)
 - `<C-a>` = increment numbers in selection
 - `g<C-a>` = increment numbers in selection (sequentially)
+- `<C-x>` = decrement numbers in selection
+- `g<C-x>` = decrement numbers in selection (sequentially)
 
 ## ---- char mode
 
