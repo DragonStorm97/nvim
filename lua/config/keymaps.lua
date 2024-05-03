@@ -104,7 +104,7 @@ vim.keymap.set("", "<leader>gS", "<cmd>Git status<cr>", { desc = "[S]tatus" })
 -- exists: <leader>ghd
 
 -- Open spectre
-vim.keymap.set("", "<leader>H", "<cmd>Spectre<cr>", { desc = "Open Spectre (Find and Replace)" })
+vim.keymap.set("", "<leader>rH", "<cmd>Spectre<cr>", { desc = "Open Spectre (Find and Replace)" })
 
 -- ALT-Backspace or ALT-d for shortcut to delete previous word (can't use ctrl-BS as it maps to c-h in the terminal)
 vim.keymap.set("i", "<M-BS>", "<Esc>dbi", { desc = "Delete Word Before Word Under Cursor" })
@@ -167,41 +167,34 @@ vim.keymap.set("n", "<leader>S", [[:%s/\<<C-r><C-w>\>//gI<Left><Left><Left>]], {
 -- list workspace symbols:
 vim.keymap.set("n", "gS", "<cmd>Telescope lsp_document_symbols<cr>", { desc = "Open Document [S]ymbols" })
 
--- harpoon keymaps:
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
-vim.keymap.set("n", "<leader>ha", function()
-	mark.add_file()
-end, { desc = "[H]arpoon [A]dd" })
-vim.keymap.set("n", "<leader>hr", function()
-	mark.rm_file(vim.api.nvim_buf_get_name(0))
-end, { desc = "[H]arpoon [R]emove" })
-vim.keymap.set("n", "<leader>hp", function()
-	ui.toggle_quick_menu()
-end, { desc = "[P]review Menu" })
-vim.keymap.set("n", "<leader>hh", "<CMD>Telescope harpoon marks<CR>", { desc = "h... Telescope Preview Menu" })
-vim.keymap.set("n", "<leader>ht", "<CMD>Telescope harpoon marks<CR>", { desc = "[T]elescope Preview Menu" })
-vim.keymap.set("n", "<leader>h1", function()
-	ui.nav_file(1)
-end, { desc = "[H]arpoon File 1" })
-vim.keymap.set("n", "<leader>h2", function()
-	ui.nav_file(2)
-end, { desc = "[H]arpoon File 2" })
-vim.keymap.set("n", "<leader>h3", function()
-	ui.nav_file(3)
-end, { desc = "[H]arpoon File 3" })
-vim.keymap.set("n", "<leader>h4", function()
-	ui.nav_file(4)
-end, { desc = "[H]arpoon File 4" })
-vim.keymap.set("n", "<leader>h5", function()
-	ui.nav_file(5)
-end, { desc = "[H]arpoon File 5" })
-vim.keymap.set("n", "<leader>hn", function()
-	ui.nav_prev()
-end, { desc = "[H]arpoon: Previous File" })
-vim.keymap.set("n", "<leader>hN", function()
-	ui.nav_next()
-end, { desc = "[H]arpoon: Next File" })
+-- harpoon2 telescope:
+-- TODO: not sure if this should still be used?
+vim.keymap.set("n", "<leader>0", "<cmd>Telescope harpoon marks<cr>", { desc = "Telescope Harpoon" })
+-- TODO: this does mostly the same as the above but is from the harpoon2 docs... (pick one)
+-- basic telescope configuration
+local harpoon = require("harpoon")
+local function toggle_telescope(harpoon_files)
+	local conf = require("telescope.config").values
+	local file_paths = {}
+	for _, item in ipairs(harpoon_files.items) do
+		table.insert(file_paths, item.value)
+	end
+
+	require("telescope.pickers")
+		.new({}, {
+			prompt_title = "Harpoon",
+			finder = require("telescope.finders").new_table({
+				results = file_paths,
+			}),
+			previewer = conf.file_previewer({}),
+			sorter = conf.generic_sorter({}),
+		})
+		:find()
+end
+
+vim.keymap.set("n", "<C-e>", function()
+	toggle_telescope(harpoon:list())
+end, { desc = "Open harpoon window" })
 
 -- Toggle TreesitterContext
 vim.keymap.set("n", "<leader>cC", "<cmd>TSContextToggle<cr>", { desc = "Toggle TS Context" })

@@ -56,7 +56,6 @@ return {
 					{ mode = "n", keys = "<leader>f", desc = "+file/find" },
 					{ mode = "n", keys = "<leader>g", desc = "+git" },
 					{ mode = "n", keys = "<leader>gh", desc = "+diffs" },
-					{ mode = "n", keys = "<leader>h", desc = "+Harpoon" },
 					{ mode = "n", keys = "<leader>m", desc = "+markdown" },
 					{ mode = "n", keys = "<leader>q", desc = "+quit/session" },
 					{ mode = "n", keys = "<leader>s", desc = "+search" },

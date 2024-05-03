@@ -13,7 +13,33 @@ return {
 		"tpope/vim-fugitive",
 	},
 	{
-		"ThePrimeagen/harpoon",
+		"tris203/precognition.nvim",
+		keys = {
+			{
+				"<leader>P",
+				function()
+					require("precognition").toggle()
+				end,
+				desc = "Precognition: Toggle",
+			},
+		},
+		config = {
+			startVisible = true,
+			-- hints = {
+			--     ["^"] = { text = "^", prio = 1 },
+			--     ["$"] = { text = "$", prio = 1 },
+			--     ["w"] = { text = "w", prio = 10 },
+			--     ["b"] = { text = "b", prio = 10 },
+			--     ["e"] = { text = "e", prio = 10 },
+			-- },
+			-- gutterHints = {
+			--     --prio is not currentlt used for gutter hints
+			--     ["G"] = { text = "G", prio = 1 },
+			--     ["gg"] = { text = "gg", prio = 1 },
+			--     ["{"] = { text = "{", prio = 1 },
+			--     ["}"] = { text = "}", prio = 1 },
+			-- },
+		},
 	},
 	{
 		-- changes colours depending on mode and motion
@@ -56,16 +82,9 @@ return {
 				filesystem = {
 					components = {
 						harpoon_index = function(config, node, state)
-							local Marked = require("harpoon.mark")
-							local utils = require("harpoon.utils")
-							local abs_path = node.path
-							local norm_path = utils.normalize_path(abs_path)
-							-- fix for m$ paths:
-							-- local rel_path = vim.fn.fnamemodify(abs_path, ":~:.")
-							-- local path = string.gsub(rel_path, "\\", "/")
-							local path = norm_path
-							local succuss, index = pcall(Marked.get_index_of, path)
-							if succuss and index and index > 0 then
+							local rel_path = vim.fn.fnamemodify(node.path, ":~:.")
+							local harpoonItem, index = require("harpoon"):list():get_by_value(rel_path)
+							if harpoonItem ~= nil then
 								return {
 									text = string.format(" ⥤ %d", index), -- <-- Add your favorite harpoon like arrow here
 									highlight = config.highlight or "NeoTreeDirectoryIcon",
@@ -120,16 +139,14 @@ return {
 						end,
 						harpoon_toggle = function(state)
 							local node = state.tree:get_node()
-							local mark = require("harpoon.mark")
-							local utils = require("harpoon.utils")
-							local abs_path = node.path
-							local norm_path = utils.normalize_path(abs_path)
-
-							-- fix for m$ paths:
-							-- local rel_path = vim.fn.fnamemodify(abs_path, ":~:.")
-
-							-- local path = string.gsub(rel_path, "\\", "/")
-							mark.toggle_file(norm_path)
+							local rel_path = vim.fn.fnamemodify(node.path, ":~:.")
+							local harpoonItem, index = require("harpoon"):list():get_by_value(rel_path)
+							if harpoonItem ~= nil then
+								require("harpoon"):list():remove_at(index)
+							else
+								require("harpoon"):list():add({ value = rel_path, context = { row = 0, col = 0 } })
+							end
+							require("neo-tree.ui.renderer").redraw(state)
 						end,
 					},
 				},
@@ -262,11 +279,13 @@ return {
 		build = ":TSUpdate",
 		dependencies = {
 			"windwp/nvim-ts-autotag",
+			"nvim-treesitter/nvim-treesitter-textobjects",
 		},
 		opts = function(_, opts)
 			if type(opts.ensure_installed) == "table" then
 				vim.list_extend(opts.ensure_installed, {
 					"bash",
+					"blade",
 					"c",
 					"cmake",
 					"cpp",
@@ -297,6 +316,9 @@ return {
 					"markdown",
 					"markdown_inline",
 					"ocaml",
+					"php",
+					"php_only",
+					"phpdoc",
 					"python",
 					"query",
 					"regex",
@@ -315,6 +337,8 @@ return {
 				opts.highlight.enable = true
 				opts.highlight.additional_vim_regex_highlighting = false
 				opts.indent.enable = true
+				-- opts.autopairs.enable = false
+				-- opts.autotag.enable = true
 				opts.incremental_selection = {
 					enable = true,
 					keymaps = {
@@ -325,6 +349,32 @@ return {
 					},
 				}
 			end
+		end,
+		config = function(_, opts)
+			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+
+			---@diagnostic disable-next-line: inject-field
+			parser_config.blade = {
+				install_info = {
+					url = "https://github.com/EmranMR/tree-sitter-blade",
+					files = {
+						"src/parser.c",
+						-- 'src/scanner.cc',
+					},
+					branch = "main",
+					generate_requires_npm = true,
+					-- requires_generate_from_grammar = true,
+				},
+				filetype = "blade",
+			}
+
+			-- vim.filetype.add({
+			-- 	pattern = {
+			-- 		[".*%.blade%.php"] = "blade",
+			-- 	},
+			-- })
+
+			require("nvim-treesitter.configs").setup(opts)
 		end,
 	},
 	{
@@ -1209,7 +1259,7 @@ return {
         -- stylua: ignore
         keys = {
           { "<leader>Du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
-          { "<leader>De", function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
+          { "<leader>De", function() require("dapui").eval() end, desc = "Eval", mode = { "n", "v" } },
         },
 				opts = {},
 				config = function(_, opts)
@@ -1274,7 +1324,7 @@ return {
     keys = {
       {
         "<leader>DB",
-        function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
+        function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end,
         desc = "Breakpoint Condition"
       },
       {

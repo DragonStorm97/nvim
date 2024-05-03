@@ -292,23 +292,44 @@ return {
 		config = true,
 	},
 	{
+		"ccaglak/namespace.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		keys = {
+			{ "<leader>cl", "<leader>cl", desc = "Laravel" },
+			{ "<leader>clC", "<cmd>GetClasses<cr>", desc = "Get Classes" },
+			{ "<leader>clc", "<cmd>GetClass<cr>", desc = "Get Class" },
+			{ "<leader>cls", "<cmd>ClassAs<cr>", desc = "Class As" },
+			{ "<leader>cln", "<cmd>Namespace<cr>", desc = "Namespace" },
+		},
+	},
+	{
+		"ccaglak/larago.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+		},
+		keys = {
+			{ "<leader>clg", "<cmd>GoBlade<cr>", desc = "Go to Blade" },
+		},
+	},
+	-- TODO: FIX: for some bloody reason going back to prev blade buffer after this autosets filetype to html...
+	{
 		"gbprod/phpactor.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim", -- required to update phpactor
-			"neovim/nvim-lspconfig", -- required to automaticly register lsp serveur
+			"neovim/nvim-lspconfig", -- required to automatically register lsp server
 		},
 		build = ':lua require("phpactor.handler.update")', -- To install/update phpactor when installing this plugin
 		config = function()
+			local lsp_utils = require("plugins.lsp.lsp-utils")
+			-- lsp_utils.setup()
+
 			require("phpactor").setup({
 				install = {
-					-- note that I modified the plugin to add php as the first command so it actually works...
 					path = vim.fn.stdpath("data") .. "/mason/",
-					-- path = "D:/Programming/php", --vim.fn.stdpath("data") .. "/phpactor/",
 					branch = "master",
 					bin = vim.fn.stdpath("data") .. "/mason/bin/phpactor",
-					-- bin = vim.fn.stdpath("data") .. "/php/phpactor/bin/phpactor",
-					-- bin = nil,
-					-- bin = "D:/Programming/php/phpactor/bin/phpactor",
 					php_bin = "php",
 					composer_bin = "composer",
 					git_bin = "git",
@@ -316,9 +337,20 @@ return {
 				},
 				lspconfig = {
 					enabled = true,
-					options = {},
+					options = {
+						on_attach = lsp_utils.on_attach,
+						capabilities = lsp_utils.capabilities,
+						filetypes = { "php", "blade", "blade.php" },
+						-- highlight = { enable = true, additional_vim_regex_highlighting = true },
+					},
 				},
 			})
+			-- vim.filetype.add({
+			-- 	pattern = { [".*%.blade%.php"] = "blade" },
+			-- })
+			-- vim.filetype.add({
+			-- 	pattern = { [".*php"] = "php" },
+			-- })
 		end,
 	},
 	{
@@ -327,7 +359,12 @@ return {
 		dependencies = {
 			{
 				-- TODO: wtf is this?
-				{ "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+				{
+					"folke/neoconf.nvim",
+					cmd = "Neoconf",
+					config = false,
+					dependencies = { "nvim-lspconfig" },
+				},
 				{ "folke/neodev.nvim", opts = {} },
 				{ "mason.nvim" },
 				{ "williamboman/mason-lspconfig.nvim" },
@@ -446,6 +483,19 @@ return {
 					lspconfig[server_name].setup({
 						on_attach = lsp_utils.on_attach,
 						capabilities = lsp_utils.capabilities,
+					})
+				end,
+				["html"] = function()
+					lspconfig.html.setup({
+						on_attach = lsp_utils.on_attach,
+						capabilities = lsp_utils.capabilities,
+						filetypes = { "html", "templ", "blade" },
+						-- settings = {
+						-- 	html = {
+						-- 		autoClosingTags = true,
+						-- 		mirrorCursorOnMatchingTag = true,
+						-- 	},
+						-- },
 					})
 				end,
 				["lua_ls"] = function()
@@ -589,6 +639,7 @@ return {
 								"compile_flags.txt"
 							)(fname) or require("lspconfig.util").find_git_ancestor(fname)
 						end,
+						-- settings = { clangd = { }}
 					})
 				end,
 				["gopls"] = function()
@@ -909,8 +960,17 @@ return {
 			{ "<leader>ch", "<Cmd>Lspsaga finder<CR>", desc = "Find references" },
 			{ "<leader>cp", "<Cmd>Lspsaga peek_definition<CR>", desc = "Peek definition" },
 			{ "<leader>ct", "<Cmd>Lspsaga peek_type_definition<CR>", desc = "Peek type definition" },
-			{ "<leader>co", "<Cmd>Lspsaga outline<CR>", desc = "Show file outline - 'e' to jump, 'o' to toggle" },
-			{ "<leader>ca", "<cmd>Lspsaga code_action<CR>", mode = { "n", "v" }, desc = "Show code action" },
+			{
+				"<leader>co",
+				"<Cmd>Lspsaga outline<CR>",
+				desc = "Show file outline - 'e' to jump, 'o' to toggle",
+			},
+			{
+				"<leader>ca",
+				"<cmd>Lspsaga code_action<CR>",
+				mode = { "n", "v" },
+				desc = "Show code action",
+			},
 		},
 	},
 }

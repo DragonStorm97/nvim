@@ -17,7 +17,9 @@ require("lazy").setup({
 		-- add LazyVim and import its plugins
 		{ "LazyVim/LazyVim", import = "lazyvim.plugins" },
 		{ import = "lazyvim.plugins.extras.formatting.prettier" },
+		{ import = "lazyvim.plugins.extras.editor.dial" },
 		{ import = "lazyvim.plugins.extras.lang.clangd" },
+		{ import = "lazyvim.plugins.extras.editor.harpoon2" },
 		{ import = "lazyvim.plugins.extras.lang.cmake" },
 		{ import = "lazyvim.plugins.extras.lang.go" },
 		{ import = "lazyvim.plugins.extras.lang.json" },
@@ -153,6 +155,7 @@ require("nvim-treesitter.configs").setup({
 	-- A list of parser names, or "all"
 	ensure_installed = {
 		"bash",
+		"blade",
 		"c",
 		"cmake",
 		"cpp",
@@ -184,6 +187,8 @@ require("nvim-treesitter.configs").setup({
 		"markdown_inline",
 		"ocaml",
 		"php",
+		"php_only",
+		"phpdoc",
 		"python",
 		"query",
 		"regex",
