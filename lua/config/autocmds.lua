@@ -16,7 +16,7 @@ vim.api.nvim_create_autocmd({
 		-- vim.api.nvim_del_augroup_by_name("BladeStayBlade")
 		-- to LspRestart to detach damn ltex, etc...
 		-- vim.cmd("LspStop ltex")
-		vim.cmd("LspRestart")
+		-- vim.cmd("LspRestart")
 		-- vim.schedule(function()
 		-- 	vim.cmd("LspStop ltex")
 		-- end)

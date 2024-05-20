@@ -1482,4 +1482,33 @@ return {
 		"sindrets/diffview.nvim",
 		config = true,
 	},
+	{
+		"kndndrj/nvim-dbee",
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+		},
+		keys = {
+			-- {
+			--   "<leader>I",
+			--   "<leader>I",
+			--   desc = "DBEE"
+			-- },
+			{
+				"<leader>I",
+				function()
+					require("dbee").toggle()
+				end,
+				desc = "DBEE - Toggle UI",
+			},
+		},
+		build = function()
+			-- Install tries to automatically detect the install method.
+			-- if it fails, try calling it with one of these parameters:
+			--    "curl", "wget", "bitsadmin", "go"
+			require("dbee").install()
+		end,
+		config = function()
+			require("dbee").setup( --[[optional config]])
+		end,
+	},
 }

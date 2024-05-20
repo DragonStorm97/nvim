@@ -40,10 +40,13 @@ return {
 				"dockerfile-language-server",
 				"rust-analyzer",
 				"phpactor",
-				"phpcs",
+				-- "phpcs",
+				"phpstan",
 				"php-cs-fixer",
 				"php-debug-adapter",
+				-- "pint",
 				"blade-formatter",
+				"vue-language-server",
 			},
 		},
 		config = function(_, opts)
@@ -74,10 +77,13 @@ return {
 				"gopls",
 				"editorconfig-checker",
 				"phpactor",
-				"phpcs",
+				-- "phpcs",
+				"phpstan",
 				"php-cs-fixer",
 				"php-debug-adapter",
+				-- "pint",
 				"blade-formatter",
+				"vue-language-server",
 			}
 			local function ensure_installed()
 				for _, package in ipairs(packages) do
@@ -465,7 +471,7 @@ return {
 				"tsserver",
 				"yamlls",
 				"rust_analyzer",
-				-- "phpactor",
+				"phpactor",
 			},
 		},
 		config = function(_, opts)
@@ -496,6 +502,30 @@ return {
 						-- 		mirrorCursorOnMatchingTag = true,
 						-- 	},
 						-- },
+					})
+				end,
+				["ltex"] = function()
+					lspconfig.ltex.setup({
+						on_attach = lsp_utils.on_attach,
+						capabilities = lsp_utils.capabilities,
+						filetypes = {
+							"bib",
+							"gitcommit",
+							"markdown",
+							"org",
+							"plaintex",
+							"rst",
+							"rnoweb",
+							"tex",
+							"pandoc",
+							"quarto",
+							"rmd",
+							"context",
+							-- "html",
+							-- "xhtml",
+							"mail",
+							"text",
+						},
 					})
 				end,
 				["lua_ls"] = function()
@@ -706,6 +736,18 @@ return {
 								staticcheck = true,
 								directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
 								semanticTokens = true,
+							},
+						},
+					})
+				end,
+				["phpactor"] = function()
+					lspconfig.phpactor.setup({
+						on_attach = lsp_utils.on_attach,
+						capabilities = lsp_utils.capabilities,
+						filetypes = { "php", "blade", "blade.php" },
+						settings = {
+							phpactor = {
+								enabled = true,
 							},
 						},
 					})
