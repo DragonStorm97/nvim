@@ -507,6 +507,18 @@ return {
 			{ "saadparwaiz1/cmp_luasnip" },
 			{ "f3fora/cmp-spell" },
 			{ "uga-rosa/cmp-dictionary" },
+			{
+				"MattiasMTS/cmp-dbee",
+				-- commit = "0feabc1", --completion works using this commit
+				dependencies = {
+					{ "kndndrj/nvim-dbee" },
+				},
+				ft = "sql", -- optional but good to have
+				opts = {}, -- needed
+				-- config = function()
+				-- 	require("cmp-dbee").setup({})
+				-- end,
+			},
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -584,6 +596,7 @@ return {
 					documentation = cmp.config.window.bordered(),
 				},
 				formatting = {
+					expandable_indicator = true,
 					--- @type cmp.ItemField[]
 					fields = {
 						"kind",
@@ -614,6 +627,7 @@ return {
 							spell = "[spell]",
 							cmdline = "[cmd]",
 							cmdline_history = "[cmd-hist]",
+							cmp_dbee = "[cmp-dbee]",
 						})[entry.source.name]
 						vim_item.dup = ({
 							buffer = 1,
@@ -646,6 +660,7 @@ return {
 					["<Up>"] = cmp.mapping(shtab, { "i", "s" }),
 				},
 				sources = cmp.config.sources({
+					{ name = "cmp-dbee", filetype = "sql" },
 					{ name = "nvim_lua" },
 					{ name = "nvim_lsp" },
 					{ name = "nvim_lsp_signature_help" },
@@ -1487,6 +1502,8 @@ return {
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 		},
+		lazy = false,
+		enabled = true,
 		keys = {
 			-- {
 			--   "<leader>I",
