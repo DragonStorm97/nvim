@@ -30,7 +30,22 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.lang.typescript" },
 		-- { import = "lazyvim.plugins.extras.lsp.none-ls" },
 		{ import = "lazyvim.plugins.extras.editor.mini-diff" },
-		{ import = "lazyvim.plugins.extras.coding.mini-surround" },
+		{
+			-- import = "lazyvim.plugins.extras.coding.mini-surround",
+			"echasnovski/mini.surround",
+			enabled = true,
+			opts = {
+				mappings = {
+					add = "gza", -- Add surrounding in Normal and Visual modes
+					delete = "gzd", -- Delete surrounding
+					find = "gzf", -- Find surrounding (to the right)
+					find_left = "gzF", -- Find surrounding (to the left)
+					highlight = "gzh", -- Highlight surrounding
+					replace = "gzr", -- Replace surrounding
+					update_n_lines = "gzn", -- Update `n_lines`
+				},
+			},
+		},
 		-- { import = "lazyvim.plugins.extras.ui.mini-animate" },
 
 		{
