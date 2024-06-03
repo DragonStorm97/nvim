@@ -1061,6 +1061,7 @@ return {
 	},
 	{
 		"epwalsh/obsidian.nvim",
+		enabled = false,
 		-- lazy = true,
 		--event = { "BufReadPre path/to/my-vault/**.md" },
 		-- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand':
@@ -1109,6 +1110,7 @@ return {
 	{
 		-- a markdown previewer
 		"ellisonleao/glow.nvim",
+		ft = "markdown", -- or 'event = "VeryLazy"'
 		config = function()
 			local ok, mason_registry = pcall(require, "mason-registry")
 			if ok then
@@ -1122,6 +1124,37 @@ return {
 			end
 		end,
 		cmd = "Glow",
+	},
+	{
+		"tadmccorkle/markdown.nvim",
+		ft = "markdown", -- or 'event = "VeryLazy"'
+		opts = {
+			-- configuration here or empty for defaults
+		},
+	},
+	{
+		-- an inline markdown previewer
+		"MeanderingProgrammer/markdown.nvim",
+		name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
+		ft = "markdown",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		keys = {
+			{
+				"<leader>m",
+				"<leader>m",
+				desc = "Markdown",
+			},
+			{
+				"<leader>M",
+				function()
+					require("render-markdown").toggle()
+				end,
+				desc = "Markdown inline preview",
+			},
+		},
+		config = function()
+			require("render-markdown").setup({})
+		end,
 	},
 	{
 		-- TODO: undotree isn't working (also, give it a keybind)
