@@ -34,6 +34,9 @@ require("lazy").setup({
 			-- import = "lazyvim.plugins.extras.coding.mini-surround",
 			"echasnovski/mini.surround",
 			enabled = true,
+			keys = {
+				{ "gz", "gz", desc = "+surround" },
+			},
 			opts = {
 				mappings = {
 					add = "gza", -- Add surrounding in Normal and Visual modes
