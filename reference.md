@@ -27,7 +27,6 @@ choco install curl (windows default curl is too old to support --HTTP2)
 - undotree
 - nvim-spectre
 - lsp-zero?
-- folding: https://github.com/kevinhwang91/nvim-ufo#installation
 - surrounding area with character: mini.surround
 - ...
 
@@ -304,7 +303,7 @@ choco install curl (windows default curl is too old to support --HTTP2)
 - `:tabp` `(:tabprevious)` = go to previous tab
 - `:tabo` `(:tabonly)` = close all other tabs
 
-## ---- neovim-ufo (folding) ---
+## ---- folding ---
 
 - `za` = toggle fold
 - `zo` = open fold
