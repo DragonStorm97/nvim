@@ -119,7 +119,7 @@ require("lazy").setup({
 					lsp_saga = true,
 					-- lualine = true,
 					treesitter_context = true,
-					ufo = true,
+					-- ufo = true,
 				},
 			},
 		},
