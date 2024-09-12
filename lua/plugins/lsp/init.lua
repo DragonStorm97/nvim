@@ -532,6 +532,11 @@ return {
 							"mail",
 							"text",
 						},
+						settings = {
+							ltex = {
+								language = "en-GB",
+							},
+						},
 					})
 				end,
 				["lua_ls"] = function()

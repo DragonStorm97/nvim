@@ -83,6 +83,7 @@ require("lazy").setup({
 			name = "catppuccin",
 			priority = 1000,
 			opts = {
+				-- transparent_background = true,
 				integrations = {
 					alpha = true,
 					cmp = true,
