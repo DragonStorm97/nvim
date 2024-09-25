@@ -757,6 +757,7 @@ return {
 		end,
 		---@param opts cmp.ConfigSchema
 		opts = function(_, opts)
+			table.insert(opts.sorting.comparators, 1, require("clangd_extensions.cmp_scores"))
 			local cmp = require("cmp")
 			-- opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {}))
 		end,

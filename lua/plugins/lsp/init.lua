@@ -271,12 +271,12 @@ return {
 				end,
 			})
 
-			require("crates").setup({
-				null_ls = {
-					enabled = true,
-					name = "crates.nvim",
-				},
-			})
+			-- require("crates").setup({
+			-- 	null_ls = {
+			-- 		enabled = true,
+			-- 		name = "crates.nvim",
+			-- 	},
+			-- })
 		end,
 	},
 	-- TODO: rust-tools okay?
@@ -291,7 +291,7 @@ return {
 			"nvim-telescope/telescope.nvim",
 			"tpope/vim-dotenv",
 			"MunifTanjim/nui.nvim",
-			"nvimtools/none-ls.nvim",
+			-- "nvimtools/none-ls.nvim",
 		},
 		cmd = { "Sail", "Artisan", "Composer", "Npm", "Yarn", "Laravel" },
 		keys = {
@@ -414,7 +414,7 @@ return {
 				docker_compose_language_service = {},
 				neocmake = {},
 				ltex = {},
-				tsserver = {},
+				ts_ls = {},
 				-- Ensure mason installs the server
 				rust_analyzer = {},
 				taplo = {
@@ -453,7 +453,7 @@ return {
 				phpactor = {},
 			},
 			setup = {
-				tsserver = function(_, opts)
+				ts_ls = function(_, opts)
 					require("typescript").setup({ server = opts })
 					return true
 				end,
@@ -474,7 +474,7 @@ return {
 				"pyright",
 				"tailwindcss",
 				"taplo",
-				"tsserver",
+				"ts_ls",
 				"yamlls",
 				"rust_analyzer",
 				"phpactor",
@@ -604,7 +604,12 @@ return {
 						},
 					})
 				end,
-				["clangd"] = function()
+				["clangd"] = function(opts)
+					local clangd_ext_opts = LazyVim.opts("clangd_extensions.nvim")
+					require("clangd_extensions").setup(
+						vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = opts })
+					)
+
 					local capabilities_cpp = lsp_utils.capabilities
 					capabilities_cpp.offsetEncoding = { "uts-16" }
 					lspconfig.clangd.setup({
@@ -652,7 +657,7 @@ return {
 							-- "limit-references=1000",
 							-- "limit-results=100",
 							-- "rename-file-limit=50",
-							-- "fallback-stule=llvm" -- used if no .clang-format file exists
+							-- "fallback-style=llvm" -- used if no .clang-format file exists
 							-- "project-root=...",
 						},
 						init_options = {

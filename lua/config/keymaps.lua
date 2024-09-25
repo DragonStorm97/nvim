@@ -124,9 +124,9 @@ vim.keymap.set("n", "<M-Del>", "dw", { desc = "Delete Word Under Cursor" })
 -- vim.keymap.set("n", "<CR>j", "O<Esc>", { desc = "Add newline At EOL" })
 
 -- add Shift-H/L for w/b shortcuts
-vim.keymap.set("n", "<S-h>", "<C-Left>", { desc = "Move Cursor to start of Previous Word" })
+-- vim.keymap.set("n", "<S-h>", "<C-Left>", { desc = "Move Cursor to start of Previous Word" })
 --vim.keymap.set("i", "<C-h>", "<C-Left>", { desc = "Move Cursor to start of Previous Word" })
-vim.keymap.set("n", "<S-l>", "<C-Right>", { desc = "Move Cursor to start of Next Word" })
+-- vim.keymap.set("n", "<S-l>", "<C-Right>", { desc = "Move Cursor to start of Next Word" })
 --vim.keymap.set("i", "<C-l>", "<C-Right>", { desc = "Move Cursor to start of Next Word" })
 
 -- vim.keymap.set("n", "<c-a>", "ggVG", { desc = "Select All" })
@@ -149,12 +149,15 @@ vim.keymap.set("n", "N", "Nzzzv", { desc = "Go to Previous Match, Center Screen"
 vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste - Keep register" })
 -- next greatest remap ever : asbjornHaland
 -- <leader>y yanks to system clipboard
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to System Clipboard" })
-vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Yank to System Clipbaord" })
+-- vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to System Clipboard" })
+-- vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Yank to System Clipbaord" })
+
 -- don't replace the paste register when deleting selected text
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]], { desc = "Delete - Keep Register" })
 -- <leader>F formats buffer
-vim.keymap.set("n", "<leader>F", vim.lsp.buf.format, { desc = "Format Buffer" })
+-- vim.keymap.set("n", "<leader>F", function()
+-- 	vim.lsp.buf.format({ timeout_ms = 60000 })
+-- end, { desc = "Format Buffer" })
 -- cycle through errors
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz", { desc = "Go to Next Error" })
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Go To Previous Error" })
